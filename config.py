@@ -9,7 +9,14 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 class Config:
     """Configuración base de la aplicación"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:password@localhost:5432/emi_certificacion'
+    
+    # Obtener DATABASE_URL y convertir postgres:// a postgresql:// si es necesario
+    # Render y Heroku usan postgres:// pero SQLAlchemy 1.4+ requiere postgresql://
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url and database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    
+    SQLALCHEMY_DATABASE_URI = database_url or 'sqlite:///emi_certificacion.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuración de uploads
