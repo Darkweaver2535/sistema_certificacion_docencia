@@ -19,9 +19,10 @@ def listar():
     return render_template('certificados/listar.html', certificados=certificados)
 
 @certificados_bp.route('/generar/<int:docente_id>')
+@certificados_bp.route('/generar/<int:docente_id>/<formato>')
 @login_required
-def generar(docente_id):
-    """Genera un certificado para un docente"""
+def generar(docente_id, formato='pdf'):
+    """Genera un certificado para un docente en formato PDF o DOCX"""
     docente = Docente.query.get_or_404(docente_id)
     
     # Verificar si tiene criterios
@@ -30,15 +31,28 @@ def generar(docente_id):
         return redirect(url_for('docentes.ver', id=docente_id))
     
     try:
-        # Generar certificado
         generator = CertificadoGenerator(docente)
-        pdf_path = generator.generar_certificado_pdf()
         
-        flash(f'Certificado generado exitosamente para {docente.nombre_completo}', 'success')
-        
-        # Descargar automáticamente
-        return send_file(pdf_path, as_attachment=True, 
-                        download_name=f'certificado_{docente.ci}.pdf')
+        if formato.lower() == 'docx':
+            # Generar solo Word
+            docx_path, codigo = generator.generar_certificado_docx()
+            flash(f'Certificado Word generado exitosamente para {docente.nombre_completo}', 'success')
+            return send_file(docx_path, as_attachment=True, 
+                            download_name=f'certificado_{docente.ci}.docx')
+        else:
+            # Generar PDF (primero Word, luego conversión)
+            archivo_path = generator.generar_certificado_pdf()
+            
+            # Determinar extensión del archivo generado
+            extension = 'pdf' if archivo_path.endswith('.pdf') else 'docx'
+            
+            if extension == 'docx':
+                flash(f'Certificado generado como Word (conversión a PDF no disponible en este servidor)', 'warning')
+            else:
+                flash(f'Certificado PDF generado exitosamente para {docente.nombre_completo}', 'success')
+            
+            return send_file(archivo_path, as_attachment=True, 
+                            download_name=f'certificado_{docente.ci}.{extension}')
     
     except Exception as e:
         flash(f'Error al generar el certificado: {str(e)}', 'danger')

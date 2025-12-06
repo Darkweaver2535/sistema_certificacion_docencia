@@ -103,7 +103,13 @@
                                        class="btn btn-success" 
                                        style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none;"
                                        title="Descargar PDF">
-                                        <i class="bi bi-download"></i>
+                                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                                    </a>
+                                    <a href="{{ url_for('certificados.generar', docente_id=certificado.docente.id, formato='docx') }}" 
+                                       class="btn btn-outline-success" 
+                                       style="border-color: #28a745; color: #28a745;"
+                                       title="Descargar Word">
+                                        <i class="bi bi-file-earmark-word-fill"></i>
                                     </a>
                                     <a href="{{ url_for('certificados.regenerar', id=certificado.id) }}" 
                                        class="btn btn-outline-warning" 

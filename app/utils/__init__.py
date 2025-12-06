@@ -6,8 +6,10 @@ from datetime import datetime
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx2pdf import convert
 import qrcode
+import mammoth
+from weasyprint import HTML, CSS
+import tempfile
 from flask import current_app, request
 from app.models.certificado import Certificado
 from app.models.docente_criterio import DocenteCriterio
@@ -117,10 +119,10 @@ class CertificadoGenerator:
                     tabla.rows[fila_idx].cells[0].text = detalle
                 fila_idx += 1
     
-    def generar_certificado_pdf(self, output_path=None):
+    def generar_certificado_docx(self):
         """
-        Genera el certificado PDF completo
-        Retorna la ruta del archivo PDF generado
+        Genera solo el certificado Word (.docx)
+        Retorna la ruta del archivo DOCX generado y el código único
         """
         # Abrir el template Word
         doc = Document(self.template_path)
@@ -140,24 +142,104 @@ class CertificadoGenerator:
         # 5. Procesar tablas de criterios
         self._procesar_tablas_criterios(doc)
         
-        # 6. Guardar documento Word temporal
-        temp_docx_path = os.path.join(self.qr_folder, f"temp_{codigo}.docx")
-        doc.save(temp_docx_path)
+        # 6. Guardar documento Word
+        docx_path = os.path.join(self.qr_folder, f"certificado_{codigo}.docx")
+        doc.save(docx_path)
         
-        # 7. Convertir a PDF
-        if not output_path:
-            output_path = os.path.join(self.qr_folder, f"certificado_{codigo}.pdf")
-        
-        convert(temp_docx_path, output_path)
-        
-        # 8. Limpiar archivo temporal
-        if os.path.exists(temp_docx_path):
-            os.remove(temp_docx_path)
-        
-        # 9. Crear o actualizar registro en base de datos
+        # 7. Crear o actualizar registro en base de datos
         self._guardar_certificado_db(codigo, qr_path)
         
-        return output_path
+        return docx_path, codigo
+    
+    def convertir_docx_a_pdf(self, docx_path, codigo):
+        """
+        Convierte un archivo Word a PDF usando mammoth (docx→html) y weasyprint (html→pdf)
+        Compatible con servidores Linux sin MS Word
+        """
+        try:
+            # 1. Convertir DOCX a HTML usando mammoth
+            with open(docx_path, "rb") as docx_file:
+                result = mammoth.convert_to_html(docx_file)
+                html_content = result.value
+            
+            # 2. Agregar estilos CSS para mejorar la presentación del PDF
+            css_styles = """
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    margin: 40px;
+                    line-height: 1.6;
+                }
+                h1, h2, h3 {
+                    color: #003366;
+                    text-align: center;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                }
+                td, th {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+                img {
+                    max-width: 100%;
+                    height: auto;
+                }
+                .text-center {
+                    text-align: center;
+                }
+            </style>
+            """
+            
+            # 3. Combinar HTML con estilos
+            html_completo = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                {css_styles}
+            </head>
+            <body>
+                {html_content}
+            </body>
+            </html>
+            """
+            
+            # 4. Convertir HTML a PDF usando WeasyPrint
+            pdf_path = os.path.join(self.qr_folder, f"certificado_{codigo}.pdf")
+            HTML(string=html_completo).write_pdf(pdf_path)
+            
+            return pdf_path
+            
+        except Exception as e:
+            # Si falla la conversión, retornar None para que se descargue el DOCX
+            current_app.logger.error(f"Error al convertir DOCX a PDF: {str(e)}")
+            return None
+    
+    def generar_certificado_pdf(self, output_path=None):
+        """
+        Genera el certificado completo: primero DOCX, luego lo convierte a PDF
+        Retorna la ruta del archivo PDF generado (o DOCX si falla la conversión)
+        """
+        # 1. Generar documento Word
+        docx_path, codigo = self.generar_certificado_docx()
+        
+        # 2. Intentar convertir a PDF
+        pdf_path = self.convertir_docx_a_pdf(docx_path, codigo)
+        
+        # 3. Si la conversión falla, retornar el DOCX
+        if not pdf_path:
+            current_app.logger.warning("Conversión a PDF falló, retornando DOCX")
+            return docx_path
+        
+        # 4. Si se especificó un output_path personalizado, mover el archivo
+        if output_path and output_path != pdf_path:
+            os.rename(pdf_path, output_path)
+            return output_path
+        
+        return pdf_path
     
     def _reemplazar_placeholders(self, doc):
         """Reemplaza los placeholders en el documento preservando el formato"""

@@ -53,13 +53,23 @@
                     <i class="bi bi-list-check me-1"></i> Gestionar Criterios
                 </a>
                 {% if docente.certificado %}
-                <a href="{{ url_for('certificados.descargar', id=docente.certificado.id) }}" class="btn btn-success">
-                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> Descargar Certificado
-                </a>
+                <div class="btn-group">
+                    <a href="{{ url_for('certificados.descargar', id=docente.certificado.id) }}" class="btn btn-success">
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Descargar PDF
+                    </a>
+                    <a href="{{ url_for('certificados.generar', docente_id=docente.id, formato='docx') }}" class="btn btn-outline-success">
+                        <i class="bi bi-file-earmark-word-fill me-1"></i> Descargar Word
+                    </a>
+                </div>
                 {% else %}
-                <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
-                    <i class="bi bi-file-earmark-plus-fill me-1"></i> Generar Certificado
-                </a>
+                <div class="btn-group">
+                    <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Generar PDF
+                    </a>
+                    <a href="{{ url_for('certificados.generar', docente_id=docente.id, formato='docx') }}" class="btn btn-outline-primary" style="border-color: var(--emi-azul); color: var(--emi-azul);">
+                        <i class="bi bi-file-earmark-word-fill me-1"></i> Generar Word
+                    </a>
+                </div>
                 {% endif %}
             </div>
         </div>
