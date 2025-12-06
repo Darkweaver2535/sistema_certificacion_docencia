@@ -5,6 +5,7 @@ from app.models.docente import Docente
 from app.models.tipo_criterio import TipoCriterio
 from app.models.docente_criterio import DocenteCriterio
 from app.models.certificado import Certificado
+import os
 
 app = create_app()
 
@@ -22,7 +23,10 @@ def make_shell_context():
     }
 
 if __name__ == '__main__':
+    # Obtener el puerto de la variable de entorno (Render lo proporciona)
+    # Si no existe, usar 5000 para desarrollo local
+    port = int(os.environ.get('PORT', 5000))
+    
     # host='0.0.0.0' permite acceso desde otras computadoras en la red
-    # port=5000 es el puerto donde correrá la aplicación
     # debug=False en producción para mayor seguridad
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=port)
