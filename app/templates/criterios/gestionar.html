@@ -3,79 +3,177 @@
 {% block title %}Gestionar Criterios - {{ docente.nombre_completo }}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mb-3">
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <div class="row mb-4">
         <div class="col">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ url_for('docentes.listar') }}">Docentes</a></li>
-                    <li class="breadcrumb-item"><a href="{{ url_for('docentes.ver', id=docente.id) }}">{{ docente.nombre_completo }}</a></li>
-                    <li class="breadcrumb-item active">Gestionar Criterios</li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('docentes.listar') }}" style="color: var(--emi-azul);">
+                            <i class="bi bi-people-fill me-1"></i>Docentes
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('docentes.ver', id=docente.id) }}" style="color: var(--emi-azul);">
+                            {{ docente.nombre_completo }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" style="color: var(--emi-azul-oscuro);">
+                        Gestionar Criterios
+                    </li>
                 </ol>
             </nav>
+            <h2 style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                <i class="bi bi-list-check"></i> Gestionar Criterios de Producción Intelectual
+            </h2>
+            <p class="text-muted mb-0">
+                <i class="bi bi-person-badge me-1"></i>
+                Docente: <strong style="color: var(--emi-azul-oscuro);">{{ docente.nombre_completo }}</strong> 
+                <span class="mx-2">|</span>
+                CI: <code style="color: var(--emi-azul);">{{ docente.ci }}</code>
+            </p>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header bg-info text-white">
-            <h4 class="mb-0">
-                <i class="bi bi-list-check"></i> 
-                Gestionar Criterios de Producción Intelectual y Científica
+    <div class="card card-emi shadow">
+        <div class="card-header" style="background: linear-gradient(135deg, var(--emi-azul) 0%, #0099cc 100%); color: white; border: none;">
+            <h4 class="mb-2">
+                <i class="bi bi-journal-text me-2"></i>Criterios de Producción Intelectual y Científica
             </h4>
-            <p class="mb-0 mt-2"><small>Docente: <strong>{{ docente.nombre_completo }}</strong> - CI: {{ docente.ci }}</small></p>
+            <small style="opacity: 0.95;">
+                Configure los criterios que aplican al docente para generar su certificado institucional
+            </small>
         </div>
-        <div class="card-body">
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i> 
-                <strong>Instrucciones:</strong> Marque los criterios que aplican al docente y proporcione los detalles en el campo de texto.
-                Los detalles aparecerán en el certificado, puede ingresar múltiples items separados por líneas.
+        <div class="card-body p-4">
+            <!-- Instrucciones -->
+            <div class="alert alert-emi-info mb-4">
+                <h6 style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                    <i class="bi bi-info-circle-fill me-2"></i>Instrucciones de Uso
+                </h6>
+                <ul class="mb-0" style="line-height: 1.8;">
+                    <li>Marque los criterios que aplican al docente activando el checkbox</li>
+                    <li>Proporcione los detalles específicos en el campo de texto correspondiente</li>
+                    <li>Los detalles aparecerán en el certificado PDF generado</li>
+                    <li>Puede ingresar múltiples items separados por líneas</li>
+                    <li>Al guardar, el certificado se marcará para regeneración automática</li>
+                </ul>
             </div>
 
             <form method="POST" action="{{ url_for('criterios.gestionar', docente_id=docente.id) }}">
-                {% for tipo_criterio in tipos_criterios %}
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <div class="form-check">
-                            <input class="form-check-input criterio-checkbox" type="checkbox" 
-                                   id="criterio_{{ tipo_criterio.id }}" 
-                                   name="criterio_{{ tipo_criterio.id }}"
-                                   data-target="detalles_{{ tipo_criterio.id }}"
-                                   {% if tipo_criterio.id in criterios_actuales %}checked{% endif %}>
-                            <label class="form-check-label fw-bold" for="criterio_{{ tipo_criterio.id }}">
-                                {{ tipo_criterio.orden }}. {{ tipo_criterio.nombre }}
+                <!-- Lista de Criterios -->
+                <div class="criterios-container">
+                    {% for tipo_criterio in tipos_criterios %}
+                    <div class="card card-emi mb-3" style="border: 2px solid #e9ecef; border-radius: 12px; overflow: hidden;">
+                        <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-bottom: 2px solid #dee2e6; padding: 1rem 1.5rem;">
+                            <div class="form-check">
+                                <input class="form-check-input criterio-checkbox" 
+                                       type="checkbox" 
+                                       id="criterio_{{ tipo_criterio.id }}" 
+                                       name="criterio_{{ tipo_criterio.id }}"
+                                       data-target="detalles_{{ tipo_criterio.id }}"
+                                       style="width: 1.5rem; height: 1.5rem; cursor: pointer;"
+                                       {% if tipo_criterio.id in criterios_actuales %}checked{% endif %}>
+                                <label class="form-check-label ms-2" 
+                                       for="criterio_{{ tipo_criterio.id }}"
+                                       style="color: var(--emi-azul-oscuro); font-weight: 700; font-size: 1.05rem; cursor: pointer;">
+                                    <span class="badge badge-emi-info me-2" style="font-size: 0.9rem;">{{ tipo_criterio.orden }}</span>
+                                    {{ tipo_criterio.nombre }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-body criterio-detalles p-4" 
+                             id="container_{{ tipo_criterio.id }}" 
+                             style="{% if tipo_criterio.id not in criterios_actuales %}display: none;{% endif %} background: white;">
+                            <label for="detalles_{{ tipo_criterio.id }}" class="form-label fw-bold" style="color: var(--emi-azul);">
+                                <i class="bi bi-pencil-square me-1"></i>Detalles / Descripción:
                             </label>
+                            <textarea class="form-control form-control-lg" 
+                                      id="detalles_{{ tipo_criterio.id }}" 
+                                      name="detalles_{{ tipo_criterio.id }}" 
+                                      rows="6"
+                                      style="font-family: 'Segoe UI', system-ui, sans-serif; border: 2px solid #dee2e6; border-radius: 8px;"
+                                      placeholder="Ingrese los detalles de este criterio. Puede agregar múltiples items, uno por línea.&#10;&#10;Ejemplo:&#10;- Congreso Internacional de Ingeniería, Ponente, 2024&#10;- Simposio Nacional de Tecnología, Expositor, 2023&#10;- Publicación en revista indexada, Autor principal, 2022">{{ criterios_actuales.get(tipo_criterio.id, '') }}</textarea>
+                            <div class="mt-2 p-3" style="background: linear-gradient(135deg, #fff3cd 0%, #fffaef 100%); border-left: 4px solid var(--emi-amarillo); border-radius: 6px;">
+                                <small style="color: #856404;">
+                                    <i class="bi bi-lightbulb-fill me-1"></i> 
+                                    <strong>Importante:</strong> Estos detalles aparecerán en la tabla correspondiente del certificado PDF institucional.
+                                </small>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body criterio-detalles" id="container_{{ tipo_criterio.id }}" 
-                         style="{% if tipo_criterio.id not in criterios_actuales %}display: none;{% endif %}">
-                        <label for="detalles_{{ tipo_criterio.id }}" class="form-label">
-                            Detalles / Descripción:
-                        </label>
-                        <textarea class="form-control" id="detalles_{{ tipo_criterio.id }}" 
-                                  name="detalles_{{ tipo_criterio.id }}" rows="5"
-                                  placeholder="Ingrese los detalles de este criterio. Puede agregar múltiples items, uno por línea.&#10;Ejemplo:&#10;- Congreso Internacional de Ingeniería, Ponente, 2024&#10;- Simposio Nacional de Tecnología, Expositor, 2023">{{ criterios_actuales.get(tipo_criterio.id, '') }}</textarea>
-                        <small class="form-text text-muted">
-                            <i class="bi bi-lightbulb"></i> 
-                            Estos detalles aparecerán en la tabla correspondiente del certificado PDF.
-                        </small>
+                    {% endfor %}
+                </div>
+
+                <!-- Advertencia -->
+                <div class="alert mt-4 p-3" style="background: linear-gradient(135deg, #fff3cd 0%, #fffaef 100%); border-left: 4px solid var(--emi-amarillo); border-radius: 8px;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 2rem; color: #856404;"></i>
+                        <div>
+                            <strong style="color: #856404;">Atención:</strong>
+                            <p class="mb-0 text-muted">
+                                Al guardar los cambios, el certificado del docente se marcará automáticamente para regeneración. 
+                                Deberá generar nuevamente el certificado para reflejar las modificaciones.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
 
-                <div class="alert alert-warning mt-4">
-                    <i class="bi bi-exclamation-triangle"></i> 
-                    Al guardar los cambios, el certificado del docente se marcará para regeneración.
-                </div>
-
-                <div class="d-flex justify-content-between mt-4">
-                    <a href="{{ url_for('docentes.ver', id=docente.id) }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Cancelar
+                <!-- Botones de acción -->
+                <div class="d-flex justify-content-between align-items-center mt-5 pt-4" style="border-top: 2px solid #e9ecef;">
+                    <a href="{{ url_for('docentes.ver', id=docente.id) }}" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-x-circle me-2"></i>Cancelar
                     </a>
-                    <button type="submit" class="btn btn-info btn-lg">
-                        <i class="bi bi-save"></i> Guardar Criterios
+                    <button type="submit" class="btn btn-emi-primary btn-lg">
+                        <i class="bi bi-save-fill me-2"></i>Guardar Criterios
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Tips adicionales -->
+    <div class="card card-emi mt-4">
+        <div class="card-header" style="background: var(--emi-azul-oscuro); color: white;">
+            <h5 class="mb-0">
+                <i class="bi bi-lightbulb-fill me-2"></i>Consejos para Completar los Criterios
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Sea específico y conciso en las descripciones
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Incluya fechas, nombres de eventos y roles desempeñados
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Use viñetas (-) para listar múltiples items
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Mantenga un formato consistente en todos los criterios
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Revise la ortografía antes de guardar
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Actualice los criterios periódicamente
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -83,7 +181,7 @@
 
 {% block extra_js %}
 <script>
-    // Mostrar/ocultar detalles según checkbox
+    // Mostrar/ocultar detalles según checkbox con animación
     document.querySelectorAll('.criterio-checkbox').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
             const targetId = 'container_' + this.dataset.target.replace('detalles_', '');
@@ -92,11 +190,16 @@
             
             if (this.checked) {
                 container.style.display = 'block';
-                textarea.focus();
+                // Pequeña animación
+                setTimeout(function() {
+                    container.style.opacity = '1';
+                    textarea.focus();
+                }, 10);
             } else {
-                container.style.display = 'none';
-                // Opcional: limpiar el contenido si se desmarca
-                // textarea.value = '';
+                container.style.opacity = '0';
+                setTimeout(function() {
+                    container.style.display = 'none';
+                }, 200);
             }
         });
     });

@@ -1,52 +1,111 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - EMI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom EMI CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/emi-style.css') }}">
+</head>
+<body>
 
-{% block title %}Iniciar Sesión - EMI{% endblock %}
-
-{% block content %}
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-5">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h4 class="mb-0">
-                        <i class="bi bi-shield-check"></i> 
-                        Sistema de Certificación EMI
-                    </h4>
-                </div>
-                <div class="card-body p-4">
-                    <h5 class="text-center mb-4">Iniciar Sesión</h5>
+<div class="login-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="login-card">
+                    <!-- Header con Logo -->
+                    <div class="login-header">
+                        <img src="{{ url_for('static', filename='emi_logo.png') }}" alt="Logo EMI" class="img-fluid">
+                        <h4 class="mt-3 mb-0">ESCUELA MILITAR DE INGENIERÍA</h4>
+                        <p class="mb-0 mt-2" style="font-size: 0.9rem; opacity: 0.9;">Sistema de Certificación Docente</p>
+                    </div>
                     
-                    <form method="POST" action="{{ url_for('auth.login') }}">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Usuario</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" class="form-control" id="username" name="username" 
+                    <!-- Body del formulario -->
+                    <div class="login-body">
+                        <h5 class="text-center mb-4" style="color: var(--emi-azul-oscuro); font-weight: 600;">
+                            <i class="bi bi-person-circle me-2"></i>
+                            Acceso Administrativo
+                        </h5>
+                        
+                        <!-- Mensajes Flash -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        <i class="bi bi-{% if category == 'danger' %}exclamation-triangle{% elif category == 'success' %}check-circle{% else %}info-circle{% endif %} me-2"></i>
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        
+                        <form method="POST" action="{{ url_for('auth.login') }}" class="form-emi">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="bi bi-person-fill text-primary me-1"></i>
+                                    Usuario
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="username" name="username" 
                                        required autofocus placeholder="Ingrese su usuario">
                             </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input type="password" class="form-control" id="password" name="password" 
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label">
+                                    <i class="bi bi-lock-fill text-primary me-1"></i>
+                                    Contraseña
+                                </label>
+                                <input type="password" class="form-control form-control-lg" id="password" name="password" 
                                        required placeholder="Ingrese su contraseña">
                             </div>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
-                            </button>
-                        </div>
-                    </form>
+                            
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-emi-primary">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                                    Iniciar Sesión
+                                </button>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a href="{{ url_for('public.index') }}" class="btn btn-link text-decoration-none" style="color: var(--emi-azul);">
+                                    <i class="bi bi-arrow-left me-1"></i>
+                                    Volver al inicio
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="card-footer text-center border-0 bg-light py-3">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-lock text-success me-1"></i>
+                            Acceso seguro y cifrado
+                        </small>
+                    </div>
                 </div>
-                <div class="card-footer text-center text-muted">
-                    <small>Escuela Militar de Ingeniería - Bolivia</small>
+                
+                <!-- Info adicional -->
+                <div class="text-center mt-4">
+                    <p class="text-white small mb-1" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Sistema de gestión y certificación de producción intelectual
+                    </p>
+                    <p class="text-white small" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.5); opacity: 0.8;">
+                        © 2025 EMI - Todos los derechos reservados
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

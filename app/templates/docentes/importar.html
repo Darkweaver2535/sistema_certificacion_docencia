@@ -3,76 +3,209 @@
 {% block title %}Importar Docentes - EMI{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0"><i class="bi bi-file-earmark-excel"></i> Importar Docentes desde Excel/CSV</h4>
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="mb-4">
+                <h2 style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                    <i class="bi bi-file-earmark-excel-fill"></i> Importar Docentes desde Excel/CSV
+                </h2>
+                <p class="text-muted mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Cargue masivamente docentes utilizando un archivo Excel o CSV
+                </p>
+            </div>
+
+            <div class="card card-emi shadow">
+                <div class="card-header" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none;">
+                    <h4 class="mb-0">
+                        <i class="bi bi-cloud-upload-fill me-2"></i>Proceso de Importación
+                    </h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <!-- Instrucciones -->
-                    <div class="alert alert-info">
-                        <h5><i class="bi bi-info-circle"></i> Instrucciones</h5>
-                        <ol>
-                            <li>Descargue la plantilla de Excel haciendo clic en el botón de abajo</li>
+                    <div class="alert alert-emi-info mb-4">
+                        <h5 style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                            <i class="bi bi-list-ol me-2"></i>Instrucciones de Importación
+                        </h5>
+                        <ol class="mb-3" style="line-height: 2;">
+                            <li>Descargue la plantilla de Excel oficial haciendo clic en el botón de abajo</li>
                             <li>Complete la plantilla con los datos de los docentes (una fila por docente)</li>
-                            <li>Guarde el archivo y súbalo usando el formulario</li>
+                            <li>Asegúrese de que todos los campos requeridos estén completos</li>
+                            <li>Guarde el archivo y súbalo usando el formulario en esta página</li>
                             <li>El sistema validará y procesará los datos automáticamente</li>
                         </ol>
-                        <a href="{{ url_for('docentes.descargar_template') }}" class="btn btn-primary">
-                            <i class="bi bi-download"></i> Descargar Plantilla Excel
+                        <a href="{{ url_for('docentes.descargar_template') }}" class="btn btn-emi-primary btn-lg">
+                            <i class="bi bi-download me-2"></i>Descargar Plantilla Excel
                         </a>
                     </div>
 
                     <!-- Especificaciones del archivo -->
-                    <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <strong>Especificaciones del Archivo</strong>
+                    <div class="card card-emi mb-4">
+                        <div class="card-header" style="background: var(--emi-azul); color: white;">
+                            <h5 class="mb-0">
+                                <i class="bi bi-gear-fill me-2"></i>Especificaciones del Archivo
+                            </h5>
                         </div>
                         <div class="card-body">
-                            <h6>Columnas Requeridas:</h6>
-                            <ul>
-                                <li><code>nombres</code> - Nombres del docente</li>
-                                <li><code>apellidos</code> - Apellidos del docente</li>
-                                <li><code>ci</code> - Cédula de Identidad (debe ser única)</li>
-                                <li><code>unidad_codigo</code> - Código de unidad académica (UALP, UACB, UASC, UARB, UATP)</li>
-                                <li><code>cargo</code> - Cargo del docente</li>
-                                <li><code>años_servicio</code> - Años de servicio (número)</li>
-                            </ul>
-                            <h6>Columnas Opcionales:</h6>
-                            <ul>
-                                <li><code>email</code> - Correo electrónico</li>
-                                <li><code>telefono</code> - Número de teléfono</li>
-                            </ul>
-                            <h6>Formatos Aceptados:</h6>
-                            <ul>
-                                <li>Excel (.xlsx, .xls)</li>
-                                <li>CSV (.csv)</li>
-                            </ul>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 style="color: var(--emi-azul-oscuro); font-weight: 700; margin-bottom: 1rem;">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>Columnas Requeridas:
+                                    </h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <code style="background: var(--emi-azul); color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">nombres</code>
+                                            <span class="ms-2 text-muted">Nombres del docente</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <code style="background: var(--emi-azul); color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">apellidos</code>
+                                            <span class="ms-2 text-muted">Apellidos del docente</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <code style="background: var(--emi-azul); color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">ci</code>
+                                            <span class="ms-2 text-muted">Cédula de Identidad (única)</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <code style="background: var(--emi-azul); color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">unidad_codigo</code>
+                                            <span class="ms-2 text-muted">Código de unidad académica</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <code style="background: var(--emi-azul); color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">cargo</code>
+                                            <span class="ms-2 text-muted">Cargo del docente</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <code style="background: var(--emi-azul); color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">años_servicio</code>
+                                            <span class="ms-2 text-muted">Años de servicio (número)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 style="color: var(--emi-azul-oscuro); font-weight: 700; margin-bottom: 1rem;">
+                                        <i class="bi bi-info-circle-fill me-2" style="color: var(--emi-azul);"></i>Columnas Opcionales:
+                                    </h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <code style="background: #6c757d; color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">email</code>
+                                            <span class="ms-2 text-muted">Correo electrónico</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <code style="background: #6c757d; color: white; padding: 0.3rem 0.6rem; border-radius: 4px;">telefono</code>
+                                            <span class="ms-2 text-muted">Número de teléfono</span>
+                                        </li>
+                                    </ul>
+
+                                    <h6 style="color: var(--emi-azul-oscuro); font-weight: 700; margin-top: 2rem; margin-bottom: 1rem;">
+                                        <i class="bi bi-file-earmark-fill me-2" style="color: var(--emi-amarillo);"></i>Formatos Aceptados:
+                                    </h6>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge badge-emi-success" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                            <i class="bi bi-file-earmark-excel me-1"></i>.xlsx
+                                        </span>
+                                        <span class="badge badge-emi-success" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                            <i class="bi bi-file-earmark-excel me-1"></i>.xls
+                                        </span>
+                                        <span class="badge badge-emi-success" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                            <i class="bi bi-file-earmark-text me-1"></i>.csv
+                                        </span>
+                                    </div>
+
+                                    <div class="alert" style="background: #fff3cd; border-left: 4px solid var(--emi-amarillo); margin-top: 1.5rem;">
+                                        <small>
+                                            <i class="bi bi-exclamation-triangle-fill me-1" style="color: #856404;"></i>
+                                            <strong>Unidades válidas:</strong><br>
+                                            UALP, UACB, UASC, UARB, UATP
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Formulario de carga -->
-                    <form method="POST" action="{{ url_for('docentes.importar') }}" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="archivo" class="form-label">Seleccione el archivo a importar</label>
-                            <input type="file" class="form-control" id="archivo" name="archivo" 
-                                   accept=".xlsx,.xls,.csv" required>
-                            <div class="form-text">
-                                Tamaño máximo: 16 MB. Formatos permitidos: .xlsx, .xls, .csv
-                            </div>
-                        </div>
+                    <div class="card" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px dashed var(--emi-azul);">
+                        <div class="card-body p-4">
+                            <form method="POST" action="{{ url_for('docentes.importar') }}" enctype="multipart/form-data">
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-cloud-arrow-up" style="font-size: 4rem; color: var(--emi-azul);"></i>
+                                    <h5 class="mt-3" style="color: var(--emi-azul-oscuro);">Seleccione el archivo a importar</h5>
+                                </div>
 
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ url_for('docentes.listar') }}" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Volver
-                            </a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-upload"></i> Importar Docentes
-                            </button>
+                                <div class="mb-4">
+                                    <label for="archivo" class="form-label fw-bold" style="color: var(--emi-azul-oscuro);">
+                                        <i class="bi bi-file-earmark-arrow-up me-2"></i>Archivo de Docentes
+                                    </label>
+                                    <input type="file" 
+                                           class="form-control form-control-lg" 
+                                           id="archivo" 
+                                           name="archivo" 
+                                           accept=".xlsx,.xls,.csv" 
+                                           required
+                                           style="border: 2px solid var(--emi-azul); padding: 1rem;">
+                                    <div class="form-text mt-2">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <strong>Tamaño máximo:</strong> 16 MB | 
+                                        <strong>Formatos permitidos:</strong> .xlsx, .xls, .csv
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="{{ url_for('docentes.listar') }}" class="btn btn-secondary btn-lg">
+                                        <i class="bi bi-arrow-left me-2"></i>Volver a Docentes
+                                    </a>
+                                    <button type="submit" class="btn btn-emi-primary btn-lg">
+                                        <i class="bi bi-upload me-2"></i>Importar Docentes
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips adicionales -->
+            <div class="card card-emi mt-4">
+                <div class="card-header" style="background: var(--emi-amarillo); color: #856404;">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightbulb-fill me-2"></i>Consejos para una Importación Exitosa
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    Verifique que no haya CIs duplicados
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    Use el formato correcto para números (sin puntos ni comas)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    Asegúrese de que los códigos de unidad sean válidos
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    Complete todos los campos obligatorios
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    Evite caracteres especiales en los nombres
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    Revise la plantilla antes de subir el archivo
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

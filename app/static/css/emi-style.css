@@ -1,0 +1,411 @@
+/* Colores Institucionales EMI */
+:root {
+    --emi-azul-oscuro: #003366;
+    --emi-azul: #0066cc;
+    --emi-azul-claro: #3399ff;
+    --emi-amarillo: #FFD700;
+    --emi-amarillo-claro: #FFE55C;
+    --emi-blanco: #FFFFFF;
+    --emi-gris-claro: #f8f9fa;
+    --emi-texto-oscuro: #212529;
+}
+
+/* Estilos Generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--emi-texto-oscuro);
+}
+
+/* Navbar Institucional */
+.navbar-emi {
+    background: linear-gradient(135deg, var(--emi-azul-oscuro) 0%, var(--emi-azul) 100%);
+    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+    padding: 0.75rem 1rem;
+}
+
+.navbar-emi .navbar-brand {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--emi-blanco) !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-emi .navbar-brand img {
+    height: 40px;
+    margin-right: 12px;
+}
+
+.navbar-emi .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.navbar-emi .nav-link:hover {
+    color: var(--emi-amarillo) !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-emi .nav-link.active {
+    color: var(--emi-amarillo) !important;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Página Principal - Landing */
+.landing-page {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 102, 204, 0.85)), 
+                url('/static/fondo.jpg') center/cover no-repeat fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: var(--emi-blanco);
+}
+
+.landing-overlay {
+    background: rgba(0, 51, 102, 0.3);
+    backdrop-filter: blur(2px);
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.landing-content {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.landing-logo {
+    max-width: 220px;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    background: var(--emi-blanco);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeInDown 1s ease-out;
+}
+
+.landing-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out;
+    line-height: 1.2;
+}
+
+.landing-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1.2s ease-out;
+}
+
+.landing-description {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    opacity: 0.95;
+    animation: fadeInUp 1.4s ease-out;
+}
+
+/* Botones Institucionales */
+.btn-emi-primary {
+    background: linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-amarillo-claro) 100%);
+    color: var(--emi-azul-oscuro);
+    border: none;
+    padding: 0.875rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-emi-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+    color: var(--emi-azul-oscuro);
+}
+
+.btn-emi-secondary {
+    background: transparent;
+    color: var(--emi-blanco);
+    border: 2px solid var(--emi-amarillo);
+    padding: 0.875rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-emi-secondary:hover {
+    background: var(--emi-amarillo);
+    color: var(--emi-azul-oscuro);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+/* Cards Institucionales */
+.card-emi {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 51, 102, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card-emi:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 51, 102, 0.2);
+}
+
+.card-emi .card-header {
+    background: linear-gradient(135deg, var(--emi-azul-oscuro) 0%, var(--emi-azul) 100%);
+    color: var(--emi-blanco);
+    border: none;
+    padding: 1.25rem;
+    font-weight: 600;
+}
+
+.card-emi .card-header h3,
+.card-emi .card-header h4,
+.card-emi .card-header h5 {
+    margin: 0;
+    color: var(--emi-blanco);
+}
+
+/* Estadísticas Dashboard */
+.stat-card {
+    background: linear-gradient(135deg, var(--emi-blanco) 0%, var(--emi-gris-claro) 100%);
+    border-left: 4px solid var(--emi-azul);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-left-color: var(--emi-amarillo);
+    transform: translateX(5px);
+}
+
+.stat-card .stat-icon {
+    font-size: 2.5rem;
+    color: var(--emi-azul);
+    opacity: 0.8;
+}
+
+.stat-card .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--emi-azul-oscuro);
+}
+
+.stat-card .stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tablas */
+.table-emi {
+    background: var(--emi-blanco);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-emi thead {
+    background: linear-gradient(135deg, var(--emi-azul-oscuro) 0%, var(--emi-azul) 100%);
+    color: var(--emi-blanco);
+}
+
+.table-emi thead th {
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table-emi tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-emi tbody tr:hover {
+    background-color: rgba(0, 102, 204, 0.05);
+    transform: scale(1.01);
+}
+
+/* Badges */
+.badge-emi-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.badge-emi-warning {
+    background: linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-amarillo-claro) 100%);
+    color: var(--emi-azul-oscuro);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.badge-emi-info {
+    background: linear-gradient(135deg, var(--emi-azul) 0%, var(--emi-azul-claro) 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Formularios */
+.form-emi .form-label {
+    color: var(--emi-azul-oscuro);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-emi .form-control,
+.form-emi .form-select {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-emi .form-control:focus,
+.form-emi .form-select:focus {
+    border-color: var(--emi-azul);
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+}
+
+/* Alertas */
+.alert-emi-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-left: 4px solid #28a745;
+    color: #155724;
+}
+
+.alert-emi-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    border-left: 4px solid var(--emi-azul);
+    color: #0c5460;
+}
+
+.alert-emi-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+    border-left: 4px solid var(--emi-amarillo);
+    color: #856404;
+}
+
+.alert-emi-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Login Page */
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 102, 204, 0.85)), 
+                url('/static/fondo.jpg') center/cover no-repeat fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: var(--emi-blanco);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    max-width: 450px;
+    width: 100%;
+}
+
+.login-header {
+    background: linear-gradient(135deg, var(--emi-azul-oscuro) 0%, var(--emi-azul) 100%);
+    color: var(--emi-blanco);
+    padding: 2rem;
+    text-align: center;
+}
+
+.login-header img {
+    max-width: 150px;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--emi-blanco);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.login-body {
+    padding: 2.5rem;
+}
+
+/* Footer */
+.footer-emi {
+    background: linear-gradient(135deg, var(--emi-azul-oscuro) 0%, var(--emi-azul) 100%);
+    color: var(--emi-blanco);
+    padding: 2rem 0;
+    margin-top: 4rem;
+}
+
+.footer-emi p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .landing-title {
+        font-size: 2rem;
+    }
+    
+    .landing-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .landing-logo {
+        max-width: 120px;
+    }
+    
+    .btn-emi-primary,
+    .btn-emi-secondary {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+    }
+}

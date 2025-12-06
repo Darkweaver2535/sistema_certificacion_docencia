@@ -1,64 +1,157 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI - Sistema de Certificación Docente</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/emi-style.css') }}">
+</head>
+<body>
 
-{% block title %}EMI - Sistema de Certificación{% endblock %}
-
-{% block navbar %}{% endblock %}
-
-{% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <div class="mb-5">
-                <h1 class="display-4 text-primary">
-                    <i class="bi bi-shield-check"></i>
+<div class="landing-page">
+    <div class="landing-overlay">
+        <div class="container">
+            <div class="landing-content">
+                <!-- Logo EMI -->
+                <img src="{{ url_for('static', filename='emi_logo.png') }}" alt="Logo EMI" class="landing-logo">
+                
+                <!-- Título Principal -->
+                <h1 class="landing-title">
                     ESCUELA MILITAR DE INGENIERÍA
                 </h1>
-                <p class="lead text-muted">Sistema de Certificación de Producción Intelectual y Científica</p>
-            </div>
-
-            <div class="card shadow-lg">
-                <div class="card-body p-5">
-                    <h3 class="mb-4">Verificación de Certificados</h3>
-                    <p class="text-muted mb-4">
-                        Escanee el código QR del certificado o ingrese el código de verificación para consultar su autenticidad
-                    </p>
-
-                    <div class="mb-4">
-                        <i class="bi bi-qr-code-scan text-primary" style="font-size: 5rem;"></i>
-                    </div>
-
-                    <p class="text-muted">
-                        <small>
-                            Para acceder a la administración del sistema, 
-                            <a href="{{ url_for('auth.login') }}">inicie sesión aquí</a>
-                        </small>
-                    </p>
-                </div>
-            </div>
-
-            <div class="mt-5">
-                <p class="text-muted">
-                    <small>
-                        Escuela Militar de Ingeniería - Bolivia<br>
-                        Unidades Académicas: La Paz, Cochabamba, Santa Cruz, Riberalta, Trópico
-                    </small>
+                
+                <!-- Subtítulo -->
+                <h2 class="landing-subtitle">
+                    Sistema de Certificación Docente
+                </h2>
+                
+                <!-- Descripción -->
+                <p class="landing-description">
+                    Plataforma institucional para la gestión y certificación de la producción 
+                    intelectual y científica del plantel docente de todas las unidades académicas de Bolivia.
                 </p>
+                
+                <!-- Botones de Acción -->
+                <div class="d-flex gap-3 justify-content-center flex-wrap mb-5">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-emi-primary">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Acceso Administrativo
+                    </a>
+                    <a href="#verificacion" class="btn btn-emi-secondary">
+                        <i class="bi bi-qr-code-scan me-2"></i>
+                        Verificar Certificado
+                    </a>
+                </div>
+                
+                <!-- Información de Unidades -->
+                <div class="row g-3 mt-4" style="max-width: 900px; margin: 0 auto;">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card card-emi text-center p-3">
+                            <div class="card-body">
+                                <i class="bi bi-geo-alt-fill text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6 class="mb-1">UALP</h6>
+                                <small class="text-muted">La Paz</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card card-emi text-center p-3">
+                            <div class="card-body">
+                                <i class="bi bi-geo-alt-fill text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6 class="mb-1">UACB</h6>
+                                <small class="text-muted">Cochabamba</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card card-emi text-center p-3">
+                            <div class="card-body">
+                                <i class="bi bi-geo-alt-fill text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6 class="mb-1">UASC</h6>
+                                <small class="text-muted">Santa Cruz</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="card card-emi text-center p-3">
+                            <div class="card-body">
+                                <i class="bi bi-geo-alt-fill text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6 class="mb-1">UARB</h6>
+                                <small class="text-muted">Riberalta</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="card card-emi text-center p-3">
+                            <div class="card-body">
+                                <i class="bi bi-geo-alt-fill text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6 class="mb-1">UATP</h6>
+                                <small class="text-muted">Trópico</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_css %}
-<style>
-    body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-    }
-    main {
-        width: 100%;
-    }
-</style>
-{% endblock %}
+<!-- Sección de Verificación -->
+<section id="verificacion" class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card card-emi">
+                    <div class="card-header text-center">
+                        <h3>
+                            <i class="bi bi-shield-check"></i>
+                            Verificación de Certificados
+                        </h3>
+                    </div>
+                    <div class="card-body p-5 text-center">
+                        <p class="lead mb-4">
+                            Escanee el código QR del certificado con su dispositivo móvil 
+                            para verificar su autenticidad y consultar la información del docente.
+                        </p>
+                        
+                        <div class="mb-4">
+                            <i class="bi bi-qr-code-scan" style="font-size: 6rem; color: var(--emi-azul);"></i>
+                        </div>
+                        
+                        <div class="alert alert-emi-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Instrucciones:</strong> Abra la cámara de su teléfono y apunte al código QR del certificado. 
+                            El sistema mostrará automáticamente la información verificada del docente y sus criterios de producción intelectual.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-emi">
+    <div class="container text-center">
+        <p class="mb-2">
+            <strong>ESCUELA MILITAR DE INGENIERÍA</strong>
+        </p>
+        <p class="mb-2">
+            Sistema de Certificación de Producción Intelectual y Científica
+        </p>
+        <p class="small">
+            © 2025 EMI - Todos los derechos reservados
+        </p>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

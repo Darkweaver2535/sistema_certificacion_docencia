@@ -3,23 +3,40 @@
 {% block title %}Certificados - EMI{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row mb-3">
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
         <div class="col">
-            <h2><i class="bi bi-file-earmark-pdf"></i> Certificados Generados</h2>
+            <h2 style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Certificados Generados
+            </h2>
+            <p class="text-muted mb-0">
+                <i class="bi bi-info-circle me-1"></i>
+                Gestión de certificados de producción intelectual y científica
+            </p>
         </div>
-        <div class="col text-end">
-            <a href="{{ url_for('docentes.listar') }}" class="btn btn-primary">
-                <i class="bi bi-people"></i> Ver Docentes
+        <div class="col-auto">
+            <a href="{{ url_for('docentes.listar') }}" class="btn btn-emi-primary">
+                <i class="bi bi-people-fill me-1"></i> Ver Docentes
             </a>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
+    <!-- Tabla de certificados -->
+    <div class="card card-emi">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="bi bi-list-ul"></i> 
+                Registro de Certificados
+                {% if certificados %}
+                    <span class="badge badge-emi-info ms-2">{{ certificados|length }} certificados</span>
+                {% endif %}
+            </h5>
+        </div>
+        <div class="card-body p-0">
             {% if certificados %}
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-emi table-hover mb-0">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -28,53 +45,84 @@
                             <th>Unidad</th>
                             <th>Fecha Generación</th>
                             <th>Última Actualización</th>
-                            <th>Estado</th>
+                            <th class="text-center">Estado</th>
                             <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for certificado in certificados %}
                         <tr>
-                            <td><code>{{ certificado.codigo_unico }}</code></td>
-                            <td><strong>{{ certificado.docente.nombre_completo }}</strong></td>
-                            <td>{{ certificado.docente.ci }}</td>
-                            <td><span class="badge bg-info">{{ certificado.docente.unidad.codigo }}</span></td>
-                            <td>{{ certificado.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}</td>
-                            <td>{{ certificado.fecha_ultima_actualizacion.strftime('%d/%m/%Y %H:%M') }}</td>
                             <td>
+                                <code style="color: var(--emi-azul); font-weight: 600; font-size: 0.9rem;">
+                                    {{ certificado.codigo_unico }}
+                                </code>
+                            </td>
+                            <td>
+                                <strong style="color: var(--emi-azul-oscuro);">
+                                    {{ certificado.docente.nombre_completo }}
+                                </strong>
+                            </td>
+                            <td><code style="color: #666;">{{ certificado.docente.ci }}</code></td>
+                            <td>
+                                <span class="badge badge-emi-info">
+                                    {{ certificado.docente.unidad.codigo }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ certificado.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}
+                                </small>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock-history me-1"></i>
+                                    {{ certificado.fecha_ultima_actualizacion.strftime('%d/%m/%Y %H:%M') }}
+                                </small>
+                            </td>
+                            <td class="text-center">
                                 {% if certificado.valido %}
                                     {% if certificado.docente.requiere_regeneracion %}
-                                        <span class="badge bg-warning">
-                                            <i class="bi bi-exclamation-triangle"></i> Requiere Regeneración
+                                        <span class="badge badge-emi-warning">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Requiere Regeneración
                                         </span>
                                     {% else %}
-                                        <span class="badge bg-success">
-                                            <i class="bi bi-check-circle"></i> Válido
+                                        <span class="badge badge-emi-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Válido
                                         </span>
                                     {% endif %}
                                 {% else %}
                                     <span class="badge bg-danger">
-                                        <i class="bi bi-x-circle"></i> Inválido
+                                        <i class="bi bi-x-circle-fill me-1"></i> Inválido
                                     </span>
                                 {% endif %}
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ url_for('certificados.descargar', id=certificado.id) }}" 
-                                       class="btn btn-success" title="Descargar PDF">
+                                       class="btn btn-success" 
+                                       style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none;"
+                                       title="Descargar PDF">
                                         <i class="bi bi-download"></i>
                                     </a>
                                     <a href="{{ url_for('certificados.regenerar', id=certificado.id) }}" 
-                                       class="btn btn-warning" title="Regenerar">
+                                       class="btn btn-outline-warning" 
+                                       style="border-color: var(--emi-amarillo); color: #856404;"
+                                       title="Regenerar Certificado">
                                         <i class="bi bi-arrow-clockwise"></i>
                                     </a>
                                     <a href="{{ url_for('public.verificar', codigo=certificado.codigo_unico) }}" 
-                                       class="btn btn-info" title="Ver Verificación Pública" target="_blank">
-                                        <i class="bi bi-eye"></i>
+                                       class="btn btn-outline-info" 
+                                       style="border-color: var(--emi-azul); color: var(--emi-azul);"
+                                       title="Ver Verificación Pública" 
+                                       target="_blank">
+                                        <i class="bi bi-qr-code-scan"></i>
                                     </a>
                                     <a href="{{ url_for('docentes.ver', id=certificado.docente.id) }}" 
-                                       class="btn btn-outline-primary" title="Ver Docente">
-                                        <i class="bi bi-person"></i>
+                                       class="btn btn-outline-primary" 
+                                       style="border-color: var(--emi-azul); color: var(--emi-azul);"
+                                       title="Ver Docente">
+                                        <i class="bi bi-person-fill"></i>
                                     </a>
                                 </div>
                             </td>
@@ -85,10 +133,11 @@
             </div>
             {% else %}
             <div class="text-center py-5">
-                <i class="bi bi-inbox fs-1 text-muted"></i>
-                <p class="text-muted mt-3">No hay certificados generados aún</p>
-                <a href="{{ url_for('docentes.listar') }}" class="btn btn-primary">
-                    <i class="bi bi-people"></i> Ver Docentes
+                <i class="bi bi-file-earmark-x" style="font-size: 5rem; color: #ccc;"></i>
+                <h4 class="mt-4 mb-2" style="color: var(--emi-azul-oscuro);">No hay certificados generados aún</h4>
+                <p class="text-muted mb-4">Genere certificados desde la sección de docentes</p>
+                <a href="{{ url_for('docentes.listar') }}" class="btn btn-emi-primary btn-lg">
+                    <i class="bi bi-people-fill me-2"></i> Ir a Docentes
                 </a>
             </div>
             {% endif %}
