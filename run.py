@@ -22,4 +22,7 @@ def make_shell_context():
     }
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # host='0.0.0.0' permite acceso desde otras computadoras en la red
+    # port=5000 es el puerto donde correrá la aplicación
+    # debug=False en producción para mayor seguridad
+    app.run(debug=True, host='0.0.0.0', port=5000)
