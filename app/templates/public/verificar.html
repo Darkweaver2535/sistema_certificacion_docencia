@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Certificado - EMI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <!-- Header EMI -->
+            <div class="text-center mb-5">
+                <h1 class="display-6 text-primary">
+                    <i class="bi bi-shield-check"></i>
+                    ESCUELA MILITAR DE INGENIERÍA
+                </h1>
+                <p class="lead text-muted">Sistema de Verificación de Certificados</p>
+                <hr class="my-4">
+            </div>
+
+            {% if error %}
+            <!-- Error: Certificado no encontrado -->
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3><i class="bi bi-exclamation-triangle"></i> Certificado No Válido</h3>
+                </div>
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
+                    <p class="mt-4 fs-5">{{ error }}</p>
+                    <p class="text-muted">El código ingresado no corresponde a ningún certificado válido en el sistema.</p>
+                </div>
+            </div>
+            {% elif certificado %}
+            <!-- Certificado Válido -->
+            <div class="card border-success shadow-lg">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h3 class="mb-0">
+                        <i class="bi bi-check-circle-fill"></i> 
+                        CERTIFICADO VÁLIDO
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Código Único -->
+                    <div class="alert alert-success text-center mb-4">
+                        <h5 class="mb-1">Código de Verificación</h5>
+                        <h2 class="mb-0"><code>{{ certificado.codigo_unico }}</code></h2>
+                    </div>
+
+                    <!-- Datos del Docente -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="bi bi-person-badge"></i> Datos del Docente</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Nombre Completo</label>
+                                    <h5>{{ certificado.docente.nombre_completo }}</h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Cédula de Identidad</label>
+                                    <h5><code>{{ certificado.docente.ci }}</code></h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Unidad Académica</label>
+                                    <h5>
+                                        <span class="badge bg-info fs-6">{{ certificado.docente.unidad.codigo }}</span>
+                                        {{ certificado.docente.unidad.nombre }}
+                                    </h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Ciudad</label>
+                                    <h5>{{ certificado.docente.unidad.ciudad }}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Cargo</label>
+                                    <h5>{{ certificado.docente.cargo or '-' }}</h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Años de Servicio</label>
+                                    <h5>{{ certificado.docente.años_servicio or '-' }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Criterios de Producción Intelectual y Científica -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="bi bi-journal-text"></i> 
+                                Criterios de Producción Intelectual y Científica
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if certificado.docente.criterios.count() > 0 %}
+                                {% for docente_criterio in certificado.docente.criterios.all() %}
+                                <div class="mb-4 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+                                    <h6 class="text-primary mb-2">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        {{ docente_criterio.tipo_criterio.nombre }}
+                                    </h6>
+                                    <div class="bg-light p-3 rounded">
+                                        <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ docente_criterio.detalles }}</pre>
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar3"></i> 
+                                        Registrado: {{ docente_criterio.fecha_registro.strftime('%d de %B de %Y') }}
+                                    </small>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted text-center mb-0">No hay criterios registrados</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Información del Certificado -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <small class="text-muted">Fecha de Emisión</small>
+                                    <h6 class="mb-0">{{ certificado.fecha_generacion.strftime('%d de %B de %Y') }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <small class="text-muted">Última Actualización</small>
+                                    <h6 class="mb-0">{{ certificado.fecha_ultima_actualizacion.strftime('%d de %B de %Y') }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center text-muted">
+                    <small>
+                        <i class="bi bi-shield-check"></i>
+                        Este certificado ha sido verificado y es auténtico según los registros de la EMI
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Footer -->
+            <div class="text-center mt-5">
+                <p class="text-muted">
+                    <small>
+                        Escuela Militar de Ingeniería - Bolivia<br>
+                        Sistema de Certificación de Producción Intelectual y Científica
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+</style>
+{% endblock %}

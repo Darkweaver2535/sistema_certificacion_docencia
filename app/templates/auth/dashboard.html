@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - EMI{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="bi bi-speedometer2"></i> Dashboard Administrativo</h2>
+            <p class="text-muted">Bienvenido, {{ current_user.nombre_completo or current_user.username }}</p>
+        </div>
+    </div>
+
+    <!-- Estadísticas principales -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Docentes</h6>
+                            <h2 class="mb-0">{{ total_docentes }}</h2>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-people fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Certificados</h6>
+                            <h2 class="mb-0">{{ total_certificados }}</h2>
+                        </div>
+                        <div class="text-success">
+                            <i class="bi bi-file-earmark-pdf fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Unidades Académicas</h6>
+                            <h2 class="mb-0">{{ total_unidades }}</h2>
+                        </div>
+                        <div class="text-info">
+                            <i class="bi bi-building fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Sin Certificado</h6>
+                            <h2 class="mb-0">{{ docentes_sin_certificado }}</h2>
+                        </div>
+                        <div class="text-warning">
+                            <i class="bi bi-exclamation-triangle fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Docentes por Unidad Académica -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Docentes por Unidad Académica</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Unidad</th>
+                                    <th>Ciudad</th>
+                                    <th class="text-end">Docentes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in stats_unidades %}
+                                <tr>
+                                    <td><strong>{{ stat.unidad.codigo }}</strong></td>
+                                    <td>{{ stat.unidad.ciudad }}</td>
+                                    <td class="text-end">
+                                        <span class="badge bg-primary">{{ stat.count }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Docentes Recientes -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Docentes Registrados Recientemente</h5>
+                </div>
+                <div class="card-body">
+                    {% if docentes_recientes %}
+                    <div class="list-group list-group-flush">
+                        {% for docente in docentes_recientes %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ docente.nombre_completo }}</h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-building"></i> {{ docente.unidad.codigo }} - 
+                                        <i class="bi bi-card-text"></i> CI: {{ docente.ci }}
+                                    </small>
+                                </div>
+                                <small class="text-muted">{{ docente.fecha_registro.strftime('%d/%m/%Y') }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center mb-0">No hay docentes registrados aún</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('docentes.crear') }}" class="btn btn-primary w-100">
+                                <i class="bi bi-person-plus"></i> Registrar Docente
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('docentes.importar') }}" class="btn btn-success w-100">
+                                <i class="bi bi-file-earmark-excel"></i> Importar desde Excel
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('docentes.listar') }}" class="btn btn-info w-100">
+                                <i class="bi bi-list-ul"></i> Ver Todos los Docentes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

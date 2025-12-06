@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Gestionar Criterios - {{ docente.nombre_completo }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-3">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('docentes.listar') }}">Docentes</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('docentes.ver', id=docente.id) }}">{{ docente.nombre_completo }}</a></li>
+                    <li class="breadcrumb-item active">Gestionar Criterios</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-list-check"></i> 
+                Gestionar Criterios de Producción Intelectual y Científica
+            </h4>
+            <p class="mb-0 mt-2"><small>Docente: <strong>{{ docente.nombre_completo }}</strong> - CI: {{ docente.ci }}</small></p>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> 
+                <strong>Instrucciones:</strong> Marque los criterios que aplican al docente y proporcione los detalles en el campo de texto.
+                Los detalles aparecerán en el certificado, puede ingresar múltiples items separados por líneas.
+            </div>
+
+            <form method="POST" action="{{ url_for('criterios.gestionar', docente_id=docente.id) }}">
+                {% for tipo_criterio in tipos_criterios %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <div class="form-check">
+                            <input class="form-check-input criterio-checkbox" type="checkbox" 
+                                   id="criterio_{{ tipo_criterio.id }}" 
+                                   name="criterio_{{ tipo_criterio.id }}"
+                                   data-target="detalles_{{ tipo_criterio.id }}"
+                                   {% if tipo_criterio.id in criterios_actuales %}checked{% endif %}>
+                            <label class="form-check-label fw-bold" for="criterio_{{ tipo_criterio.id }}">
+                                {{ tipo_criterio.orden }}. {{ tipo_criterio.nombre }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-body criterio-detalles" id="container_{{ tipo_criterio.id }}" 
+                         style="{% if tipo_criterio.id not in criterios_actuales %}display: none;{% endif %}">
+                        <label for="detalles_{{ tipo_criterio.id }}" class="form-label">
+                            Detalles / Descripción:
+                        </label>
+                        <textarea class="form-control" id="detalles_{{ tipo_criterio.id }}" 
+                                  name="detalles_{{ tipo_criterio.id }}" rows="5"
+                                  placeholder="Ingrese los detalles de este criterio. Puede agregar múltiples items, uno por línea.&#10;Ejemplo:&#10;- Congreso Internacional de Ingeniería, Ponente, 2024&#10;- Simposio Nacional de Tecnología, Expositor, 2023">{{ criterios_actuales.get(tipo_criterio.id, '') }}</textarea>
+                        <small class="form-text text-muted">
+                            <i class="bi bi-lightbulb"></i> 
+                            Estos detalles aparecerán en la tabla correspondiente del certificado PDF.
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="alert alert-warning mt-4">
+                    <i class="bi bi-exclamation-triangle"></i> 
+                    Al guardar los cambios, el certificado del docente se marcará para regeneración.
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ url_for('docentes.ver', id=docente.id) }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-info btn-lg">
+                        <i class="bi bi-save"></i> Guardar Criterios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mostrar/ocultar detalles según checkbox
+    document.querySelectorAll('.criterio-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const targetId = 'container_' + this.dataset.target.replace('detalles_', '');
+            const container = document.getElementById(targetId);
+            const textarea = document.getElementById(this.dataset.target);
+            
+            if (this.checked) {
+                container.style.display = 'block';
+                textarea.focus();
+            } else {
+                container.style.display = 'none';
+                // Opcional: limpiar el contenido si se desmarca
+                // textarea.value = '';
+            }
+        });
+    });
+</script>
+{% endblock %}

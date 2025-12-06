@@ -1,0 +1,17 @@
+# Dependencias alternativas si docx2pdf falla en macOS con Python 3.13
+
+Flask==3.0.0
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+pandas>=2.2.0
+openpyxl==3.1.2
+python-docx==1.1.0
+# docx2pdf==0.1.8  # Comentado - usar LibreOffice en su lugar
+qrcode[pil]==7.4.2
+Pillow>=10.0.0
+Werkzeug==3.0.1
+
+# Nota: Para conversión PDF en macOS, instalar LibreOffice:
+# brew install libreoffice

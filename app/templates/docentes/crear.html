@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Docente - EMI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-plus"></i> Registrar Nuevo Docente</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('docentes.crear') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombres" class="form-label">Nombres <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nombres" name="nombres" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidos" class="form-label">Apellidos <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="ci" class="form-label">Cédula de Identidad <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ci" name="ci" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="unidad_academica_id" class="form-label">Unidad Académica <span class="text-danger">*</span></label>
+                                <select class="form-select" id="unidad_academica_id" name="unidad_academica_id" required>
+                                    <option value="">Seleccione una unidad</option>
+                                    {% for unidad in unidades %}
+                                    <option value="{{ unidad.id }}">{{ unidad.codigo }} - {{ unidad.ciudad }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="cargo" class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="cargo" name="cargo" 
+                                       placeholder="Ej: Docente Titular, Docente Asociado">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="años_servicio" class="form-label">Años de Servicio</label>
+                                <input type="number" class="form-control" id="años_servicio" name="años_servicio" 
+                                       min="0" max="50">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       placeholder="ejemplo@emi.edu.bo">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" 
+                                       placeholder="70123456">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ url_for('docentes.listar') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Guardar Docente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

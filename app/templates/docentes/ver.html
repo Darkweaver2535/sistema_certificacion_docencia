@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}{{ docente.nombre_completo }} - EMI{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('docentes.listar') }}">Docentes</a></li>
+                    <li class="breadcrumb-item active">{{ docente.nombre_completo }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('docentes.editar', id=docente.id) }}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <a href="{{ url_for('criterios.gestionar', docente_id=docente.id) }}" class="btn btn-info">
+                <i class="bi bi-list-check"></i> Gestionar Criterios
+            </a>
+            {% if docente.certificado %}
+            <a href="{{ url_for('certificados.descargar', id=docente.certificado.id) }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-pdf"></i> Descargar Certificado
+            </a>
+            {% else %}
+            <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-primary">
+                <i class="bi bi-file-earmark-plus"></i> Generar Certificado
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Información del Docente -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person"></i> Información Personal</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Nombre Completo:</th>
+                            <td>{{ docente.nombre_completo }}</td>
+                        </tr>
+                        <tr>
+                            <th>CI:</th>
+                            <td><code>{{ docente.ci }}</code></td>
+                        </tr>
+                        <tr>
+                            <th>Unidad Académica:</th>
+                            <td>
+                                <span class="badge bg-info">{{ docente.unidad.codigo }}</span><br>
+                                <small>{{ docente.unidad.nombre }}</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Cargo:</th>
+                            <td>{{ docente.cargo or '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Años de Servicio:</th>
+                            <td>{{ docente.años_servicio or '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ docente.email or '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Teléfono:</th>
+                            <td>{{ docente.telefono or '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha Registro:</th>
+                            <td>{{ docente.fecha_registro.strftime('%d/%m/%Y') }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Estado del Certificado -->
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-check"></i> Certificado</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if docente.certificado %}
+                        <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                        <p class="mt-2 mb-1"><strong>Certificado Generado</strong></p>
+                        <p class="text-muted small">Código: <code>{{ docente.certificado.codigo_unico }}</code></p>
+                        <p class="text-muted small">Generado: {{ docente.certificado.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}</p>
+                        {% if docente.certificado.fecha_ultima_actualizacion != docente.certificado.fecha_generacion %}
+                        <p class="text-muted small">Última actualización: {{ docente.certificado.fecha_ultima_actualizacion.strftime('%d/%m/%Y %H:%M') }}</p>
+                        {% endif %}
+                        {% if docente.requiere_regeneracion %}
+                        <div class="alert alert-warning mt-2 mb-0">
+                            <small><i class="bi bi-exclamation-triangle"></i> Requiere regeneración</small>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <i class="bi bi-x-circle text-muted fs-1"></i>
+                        <p class="mt-2 mb-0"><strong>Sin Certificado</strong></p>
+                        <p class="text-muted small">Agregue criterios y genere el certificado</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Criterios de Producción Intelectual -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-list-check"></i> Criterios de Producción Intelectual y Científica</h5>
+                    <a href="{{ url_for('criterios.gestionar', docente_id=docente.id) }}" class="btn btn-sm btn-light">
+                        <i class="bi bi-pencil"></i> Gestionar
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if criterios %}
+                    <div class="accordion" id="accordionCriterios">
+                        {% for criterio in criterios %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ criterio.id }}">
+                                <button class="accordion-button collapsed" type="button" 
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapse{{ criterio.id }}">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <strong>{{ criterio.tipo_criterio.nombre }}</strong>
+                                </button>
+                            </h2>
+                            <div id="collapse{{ criterio.id }}" class="accordion-collapse collapse" 
+                                 data-bs-parent="#accordionCriterios">
+                                <div class="accordion-body">
+                                    <div class="bg-light p-3 rounded">
+                                        {{ criterio.detalles|replace('\n', '<br>')|safe }}
+                                    </div>
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="bi bi-calendar"></i> 
+                                        Registrado: {{ criterio.fecha_registro.strftime('%d/%m/%Y') }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <p class="text-muted mt-3">No hay criterios registrados para este docente</p>
+                        <a href="{{ url_for('criterios.gestionar', docente_id=docente.id) }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Agregar Criterios
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

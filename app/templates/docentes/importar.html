@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Importar Docentes - EMI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-file-earmark-excel"></i> Importar Docentes desde Excel/CSV</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Instrucciones -->
+                    <div class="alert alert-info">
+                        <h5><i class="bi bi-info-circle"></i> Instrucciones</h5>
+                        <ol>
+                            <li>Descargue la plantilla de Excel haciendo clic en el botón de abajo</li>
+                            <li>Complete la plantilla con los datos de los docentes (una fila por docente)</li>
+                            <li>Guarde el archivo y súbalo usando el formulario</li>
+                            <li>El sistema validará y procesará los datos automáticamente</li>
+                        </ol>
+                        <a href="{{ url_for('docentes.descargar_template') }}" class="btn btn-primary">
+                            <i class="bi bi-download"></i> Descargar Plantilla Excel
+                        </a>
+                    </div>
+
+                    <!-- Especificaciones del archivo -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <strong>Especificaciones del Archivo</strong>
+                        </div>
+                        <div class="card-body">
+                            <h6>Columnas Requeridas:</h6>
+                            <ul>
+                                <li><code>nombres</code> - Nombres del docente</li>
+                                <li><code>apellidos</code> - Apellidos del docente</li>
+                                <li><code>ci</code> - Cédula de Identidad (debe ser única)</li>
+                                <li><code>unidad_codigo</code> - Código de unidad académica (UALP, UACB, UASC, UARB, UATP)</li>
+                                <li><code>cargo</code> - Cargo del docente</li>
+                                <li><code>años_servicio</code> - Años de servicio (número)</li>
+                            </ul>
+                            <h6>Columnas Opcionales:</h6>
+                            <ul>
+                                <li><code>email</code> - Correo electrónico</li>
+                                <li><code>telefono</code> - Número de teléfono</li>
+                            </ul>
+                            <h6>Formatos Aceptados:</h6>
+                            <ul>
+                                <li>Excel (.xlsx, .xls)</li>
+                                <li>CSV (.csv)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de carga -->
+                    <form method="POST" action="{{ url_for('docentes.importar') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="archivo" class="form-label">Seleccione el archivo a importar</label>
+                            <input type="file" class="form-control" id="archivo" name="archivo" 
+                                   accept=".xlsx,.xls,.csv" required>
+                            <div class="form-text">
+                                Tamaño máximo: 16 MB. Formatos permitidos: .xlsx, .xls, .csv
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ url_for('docentes.listar') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-upload"></i> Importar Docentes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Docente - EMI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Docente</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('docentes.editar', id=docente.id) }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombres" class="form-label">Nombres <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nombres" name="nombres" 
+                                       value="{{ docente.nombres }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidos" class="form-label">Apellidos <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="apellidos" name="apellidos" 
+                                       value="{{ docente.apellidos }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="ci" class="form-label">Cédula de Identidad <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ci" name="ci" 
+                                       value="{{ docente.ci }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="unidad_academica_id" class="form-label">Unidad Académica <span class="text-danger">*</span></label>
+                                <select class="form-select" id="unidad_academica_id" name="unidad_academica_id" required>
+                                    {% for unidad in unidades %}
+                                    <option value="{{ unidad.id }}" 
+                                            {% if unidad.id == docente.unidad_academica_id %}selected{% endif %}>
+                                        {{ unidad.codigo }} - {{ unidad.ciudad }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="cargo" class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="cargo" name="cargo" 
+                                       value="{{ docente.cargo or '' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="años_servicio" class="form-label">Años de Servicio</label>
+                                <input type="number" class="form-control" id="años_servicio" name="años_servicio" 
+                                       value="{{ docente.años_servicio or '' }}" min="0" max="50">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ docente.email or '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" 
+                                       value="{{ docente.telefono or '' }}">
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 
+                            Al modificar los datos del docente, el certificado se marcará para regeneración.
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ url_for('docentes.ver', id=docente.id) }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
