@@ -28,8 +28,8 @@ class Certificado(db.Model):
     # Estado
     valido = db.Column(db.Boolean, default=True)
     
-    # Relación con DocenteCriterio
-    docente_criterio = db.relationship('DocenteCriterio', backref='certificado', lazy=True)
+    # Relación con DocenteCriterio (uno a uno - un criterio tiene máximo un certificado)
+    docente_criterio = db.relationship('DocenteCriterio', backref=db.backref('certificado', uselist=False), lazy=True)
     
     def __repr__(self):
         return f'<Certificado {self.codigo_emi} - Docente:{self.docente_id}>'
