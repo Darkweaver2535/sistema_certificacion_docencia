@@ -133,52 +133,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="text-muted small mb-1">
-                                            <i class="bi bi-credit-card-fill me-1"></i>Cédula de Identidad
+                                            <i class="bi bi-calendar-check me-1"></i>Fecha Registro
                                         </label>
-                                        <h5><code style="color: var(--emi-azul); font-size: 1.1rem;">{{ certificado.docente.ci }}</code></h5>
-                                    </div>
-                                </div>
-                                <div class="row g-4 mt-2">
-                                    <div class="col-md-6">
-                                        <label class="text-muted small mb-1">
-                                            <i class="bi bi-building me-1"></i>Unidad Académica
-                                        </label>
-                                        <h5>
-                                            <span class="badge badge-emi-info" style="font-size: 1rem; padding: 0.5rem 1rem;">
-                                                {{ certificado.docente.unidad.codigo }}
-                                            </span>
-                                            <span style="color: var(--emi-azul-oscuro); margin-left: 0.5rem;">
-                                                {{ certificado.docente.unidad.nombre }}
-                                            </span>
-                                        </h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="text-muted small mb-1">
-                                            <i class="bi bi-geo-alt-fill me-1"></i>Ciudad
-                                        </label>
-                                        <h5 style="color: var(--emi-azul-oscuro);">{{ certificado.docente.unidad.ciudad }}</h5>
-                                    </div>
-                                </div>
-                                <div class="row g-4 mt-2">
-                                    <div class="col-md-6">
-                                        <label class="text-muted small mb-1">
-                                            <i class="bi bi-briefcase-fill me-1"></i>Cargo
-                                        </label>
-                                        <h5 style="color: var(--emi-azul-oscuro);">{{ certificado.docente.cargo or '-' }}</h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="text-muted small mb-1">
-                                            <i class="bi bi-clock-history me-1"></i>Años de Servicio
-                                        </label>
-                                        <h5>
-                                            {% if certificado.docente.años_servicio %}
-                                                <span class="badge" style="background: var(--emi-amarillo); color: #856404; font-size: 1rem; padding: 0.5rem 1rem;">
-                                                    {{ certificado.docente.años_servicio }} años
-                                                </span>
-                                            {% else %}
-                                                <span class="text-muted">-</span>
-                                            {% endif %}
-                                        </h5>
+                                        <h5 style="color: var(--emi-azul-oscuro);">{{ certificado.docente.fecha_registro.strftime('%d/%m/%Y') }}</h5>
                                     </div>
                                 </div>
                             </div>

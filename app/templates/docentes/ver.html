@@ -94,62 +94,6 @@
                         </div>
                         <div class="list-group-item">
                             <small class="text-muted d-block mb-1">
-                                <i class="bi bi-credit-card-fill me-1"></i>Cédula de Identidad
-                            </small>
-                            <code style="color: var(--emi-azul); font-size: 1rem; font-weight: 600;">{{ docente.ci }}</code>
-                        </div>
-                        <div class="list-group-item">
-                            <small class="text-muted d-block mb-1">
-                                <i class="bi bi-building me-1"></i>Unidad Académica
-                            </small>
-                            <span class="badge badge-emi-info" style="font-size: 0.9rem; padding: 0.4rem 0.8rem;">
-                                {{ docente.unidad.codigo }}
-                            </span>
-                            <div class="mt-1">
-                                <small style="color: var(--emi-azul-oscuro);">{{ docente.unidad.nombre }}</small>
-                            </div>
-                            <div class="mt-1">
-                                <small class="text-muted">
-                                    <i class="bi bi-geo-alt-fill me-1"></i>{{ docente.unidad.ciudad }}
-                                </small>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <small class="text-muted d-block mb-1">
-                                <i class="bi bi-briefcase-fill me-1"></i>Cargo
-                            </small>
-                            <strong style="color: var(--emi-azul-oscuro);">{{ docente.cargo or '-' }}</strong>
-                        </div>
-                        <div class="list-group-item">
-                            <small class="text-muted d-block mb-1">
-                                <i class="bi bi-clock-history me-1"></i>Años de Servicio
-                            </small>
-                            {% if docente.años_servicio %}
-                                <span class="badge" style="background: var(--emi-amarillo); color: #856404; font-size: 0.9rem; padding: 0.4rem 0.8rem;">
-                                    {{ docente.años_servicio }} años
-                                </span>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </div>
-                        <div class="list-group-item">
-                            <small class="text-muted d-block mb-1">
-                                <i class="bi bi-envelope-fill me-1"></i>Email
-                            </small>
-                            {% if docente.email %}
-                                <a href="mailto:{{ docente.email }}" style="color: var(--emi-azul);">{{ docente.email }}</a>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </div>
-                        <div class="list-group-item">
-                            <small class="text-muted d-block mb-1">
-                                <i class="bi bi-telephone-fill me-1"></i>Teléfono
-                            </small>
-                            <strong>{{ docente.telefono or '-' }}</strong>
-                        </div>
-                        <div class="list-group-item">
-                            <small class="text-muted d-block mb-1">
                                 <i class="bi bi-calendar-check me-1"></i>Fecha de Registro
                             </small>
                             <strong style="color: var(--emi-azul-oscuro);">{{ docente.fecha_registro.strftime('%d/%m/%Y') }}</strong>

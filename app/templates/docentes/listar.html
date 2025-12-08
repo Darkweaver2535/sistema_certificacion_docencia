@@ -86,12 +86,8 @@
                 <table class="table table-emi table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>CI</th>
                             <th>Nombre Completo</th>
-                            <th>Unidad</th>
-                            <th>Cargo</th>
-                            <th>Años Servicio</th>
-                            <th>Email</th>
+                            <th>Fecha Registro</th>
                             <th class="text-center">Certificado</th>
                             <th class="text-end">Acciones</th>
                         </tr>
@@ -99,24 +95,15 @@
                     <tbody>
                         {% for docente in docentes %}
                         <tr>
-                            <td><code style="color: var(--emi-azul); font-weight: 600;">{{ docente.ci }}</code></td>
                             <td>
                                 <strong style="color: var(--emi-azul-oscuro);">{{ docente.nombre_completo }}</strong>
                             </td>
                             <td>
-                                <span class="badge badge-emi-info">{{ docente.unidad.codigo }}</span>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-check me-1"></i>
+                                    {{ docente.fecha_registro.strftime('%d/%m/%Y') }}
+                                </small>
                             </td>
-                            <td>{{ docente.cargo or '-' }}</td>
-                            <td class="text-center">
-                                {% if docente.años_servicio %}
-                                    <span class="badge" style="background: #e9ecef; color: var(--emi-azul-oscuro);">
-                                        {{ docente.años_servicio }} años
-                                    </span>
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                            <td><small class="text-muted">{{ docente.email or '-' }}</small></td>
                             <td class="text-center">
                                 {% if docente.certificado %}
                                     <span class="badge badge-emi-success" title="Tiene certificado">

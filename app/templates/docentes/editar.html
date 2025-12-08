@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-9">
+        <div class="col-lg-6">
             <!-- Header -->
             <div class="mb-4">
                 <h2 style="color: var(--emi-azul-oscuro); font-weight: 700;">
@@ -30,137 +30,31 @@
                             <h5 style="color: var(--emi-azul); font-weight: 700; border-bottom: 2px solid var(--emi-azul); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
                                 <i class="bi bi-person-fill me-2"></i>Datos Personales
                             </h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="nombres" class="form-label fw-bold">
-                                        <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Nombres <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="nombres" 
-                                           name="nombres" 
-                                           value="{{ docente.nombres }}"
-                                           placeholder="Ingrese los nombres"
-                                           required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="apellidos" class="form-label fw-bold">
-                                        <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Apellidos <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="apellidos" 
-                                           name="apellidos" 
-                                           value="{{ docente.apellidos }}"
-                                           placeholder="Ingrese los apellidos"
-                                           required>
-                                </div>
+                            <div class="mb-3">
+                                <label for="nombres" class="form-label fw-bold">
+                                    <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
+                                    Nombres <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control form-control-lg" 
+                                       id="nombres" 
+                                       name="nombres" 
+                                       value="{{ docente.nombres }}"
+                                       placeholder="Ingrese los nombres"
+                                       required>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="ci" class="form-label fw-bold">
-                                        <i class="bi bi-credit-card-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Cédula de Identidad <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="ci" 
-                                           name="ci" 
-                                           value="{{ docente.ci }}"
-                                           placeholder="Ej: 1234567"
-                                           required>
-                                    <small class="text-muted">
-                                        <i class="bi bi-info-circle me-1"></i>Debe ser único en el sistema
-                                    </small>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="unidad_academica_id" class="form-label fw-bold">
-                                        <i class="bi bi-building me-1" style="color: var(--emi-azul);"></i>
-                                        Unidad Académica <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select form-select-lg" 
-                                            id="unidad_academica_id" 
-                                            name="unidad_academica_id" 
-                                            required>
-                                        {% for unidad in unidades %}
-                                        <option value="{{ unidad.id }}" 
-                                                {% if unidad.id == docente.unidad_academica_id %}selected{% endif %}>
-                                            {{ unidad.codigo }} - {{ unidad.ciudad }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Datos Laborales -->
-                        <div class="mb-4">
-                            <h5 style="color: var(--emi-azul); font-weight: 700; border-bottom: 2px solid var(--emi-azul); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                                <i class="bi bi-briefcase-fill me-2"></i>Datos Laborales
-                            </h5>
-                            <div class="row">
-                                <div class="col-md-8 mb-3">
-                                    <label for="cargo" class="form-label fw-bold">
-                                        <i class="bi bi-award-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Cargo
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="cargo" 
-                                           name="cargo" 
-                                           value="{{ docente.cargo or '' }}"
-                                           placeholder="Ej: Docente Titular, Docente Asociado, Docente Auxiliar">
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="años_servicio" class="form-label fw-bold">
-                                        <i class="bi bi-clock-history me-1" style="color: var(--emi-azul);"></i>
-                                        Años de Servicio
-                                    </label>
-                                    <input type="number" 
-                                           class="form-control form-control-lg" 
-                                           id="años_servicio" 
-                                           name="años_servicio" 
-                                           value="{{ docente.años_servicio or '' }}"
-                                           min="0" 
-                                           max="50"
-                                           placeholder="0">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Datos de Contacto -->
-                        <div class="mb-4">
-                            <h5 style="color: var(--emi-azul); font-weight: 700; border-bottom: 2px solid var(--emi-azul); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                                <i class="bi bi-envelope-fill me-2"></i>Datos de Contacto
-                            </h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label fw-bold">
-                                        <i class="bi bi-at me-1" style="color: var(--emi-azul);"></i>
-                                        Email
-                                    </label>
-                                    <input type="email" 
-                                           class="form-control form-control-lg" 
-                                           id="email" 
-                                           name="email" 
-                                           value="{{ docente.email or '' }}"
-                                           placeholder="ejemplo@emi.edu.bo">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="telefono" class="form-label fw-bold">
-                                        <i class="bi bi-telephone-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Teléfono
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="telefono" 
-                                           name="telefono" 
-                                           value="{{ docente.telefono or '' }}"
-                                           placeholder="70123456 o 2-2345678">
-                                </div>
+                            <div class="mb-3">
+                                <label for="apellidos" class="form-label fw-bold">
+                                    <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
+                                    Apellidos <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control form-control-lg" 
+                                       id="apellidos" 
+                                       name="apellidos" 
+                                       value="{{ docente.apellidos }}"
+                                       placeholder="Ingrese los apellidos"
+                                       required>
                             </div>
                         </div>
 

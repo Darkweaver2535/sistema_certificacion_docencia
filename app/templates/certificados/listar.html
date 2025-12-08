@@ -41,8 +41,6 @@
                         <tr>
                             <th>Código</th>
                             <th>Docente</th>
-                            <th>CI</th>
-                            <th>Unidad</th>
                             <th>Fecha Generación</th>
                             <th>Última Actualización</th>
                             <th class="text-center">Estado</th>
@@ -61,12 +59,6 @@
                                 <strong style="color: var(--emi-azul-oscuro);">
                                     {{ certificado.docente.nombre_completo }}
                                 </strong>
-                            </td>
-                            <td><code style="color: #666;">{{ certificado.docente.ci }}</code></td>
-                            <td>
-                                <span class="badge badge-emi-info">
-                                    {{ certificado.docente.unidad.codigo }}
-                                </span>
                             </td>
                             <td>
                                 <small class="text-muted">
