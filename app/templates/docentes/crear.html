@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-9">
+        <div class="col-lg-6">
             <!-- Header -->
             <div class="mb-4">
                 <h2 style="color: var(--emi-azul-oscuro); font-weight: 700;">
@@ -13,7 +13,7 @@
                 </h2>
                 <p class="text-muted mb-0">
                     <i class="bi bi-info-circle me-1"></i>
-                    Complete el formulario con los datos del docente. Los campos marcados con <span class="text-danger">*</span> son obligatorios.
+                    Ingrese el nombre completo del docente.
                 </p>
             </div>
 
@@ -25,138 +25,33 @@
                 </div>
                 <div class="card-body p-4">
                     <form method="POST" action="{{ url_for('docentes.crear') }}" class="form-emi">
-                        <!-- Datos Personales -->
-                        <div class="mb-4">
-                            <h5 style="color: var(--emi-azul); font-weight: 700; border-bottom: 2px solid var(--emi-azul); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                                <i class="bi bi-person-fill me-2"></i>Datos Personales
-                            </h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="nombres" class="form-label fw-bold">
-                                        <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Nombres <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="nombres" 
-                                           name="nombres" 
-                                           placeholder="Ingrese los nombres"
-                                           required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="apellidos" class="form-label fw-bold">
-                                        <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Apellidos <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="apellidos" 
-                                           name="apellidos" 
-                                           placeholder="Ingrese los apellidos"
-                                           required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="ci" class="form-label fw-bold">
-                                        <i class="bi bi-credit-card-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Cédula de Identidad <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="ci" 
-                                           name="ci" 
-                                           placeholder="Ej: 1234567"
-                                           required>
-                                    <small class="text-muted">
-                                        <i class="bi bi-info-circle me-1"></i>Debe ser único en el sistema
-                                    </small>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="unidad_academica_id" class="form-label fw-bold">
-                                        <i class="bi bi-building me-1" style="color: var(--emi-azul);"></i>
-                                        Unidad Académica <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select form-select-lg" 
-                                            id="unidad_academica_id" 
-                                            name="unidad_academica_id" 
-                                            required>
-                                        <option value="">Seleccione una unidad</option>
-                                        {% for unidad in unidades %}
-                                        <option value="{{ unidad.id }}">{{ unidad.codigo }} - {{ unidad.ciudad }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="nombres" class="form-label fw-bold">
+                                <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
+                                Nombres <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="nombres" 
+                                   name="nombres" 
+                                   placeholder="Ingrese los nombres"
+                                   required>
                         </div>
-
-                        <!-- Datos Laborales -->
                         <div class="mb-4">
-                            <h5 style="color: var(--emi-azul); font-weight: 700; border-bottom: 2px solid var(--emi-azul); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                                <i class="bi bi-briefcase-fill me-2"></i>Datos Laborales
-                            </h5>
-                            <div class="row">
-                                <div class="col-md-8 mb-3">
-                                    <label for="cargo" class="form-label fw-bold">
-                                        <i class="bi bi-award-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Cargo
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="cargo" 
-                                           name="cargo" 
-                                           placeholder="Ej: Docente Titular, Docente Asociado, Docente Auxiliar">
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="años_servicio" class="form-label fw-bold">
-                                        <i class="bi bi-clock-history me-1" style="color: var(--emi-azul);"></i>
-                                        Años de Servicio
-                                    </label>
-                                    <input type="number" 
-                                           class="form-control form-control-lg" 
-                                           id="años_servicio" 
-                                           name="años_servicio" 
-                                           min="0" 
-                                           max="50"
-                                           placeholder="0">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Datos de Contacto -->
-                        <div class="mb-4">
-                            <h5 style="color: var(--emi-azul); font-weight: 700; border-bottom: 2px solid var(--emi-azul); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                                <i class="bi bi-envelope-fill me-2"></i>Datos de Contacto
-                            </h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label fw-bold">
-                                        <i class="bi bi-at me-1" style="color: var(--emi-azul);"></i>
-                                        Email
-                                    </label>
-                                    <input type="email" 
-                                           class="form-control form-control-lg" 
-                                           id="email" 
-                                           name="email" 
-                                           placeholder="ejemplo@emi.edu.bo">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="telefono" class="form-label fw-bold">
-                                        <i class="bi bi-telephone-fill me-1" style="color: var(--emi-azul);"></i>
-                                        Teléfono
-                                    </label>
-                                    <input type="text" 
-                                           class="form-control form-control-lg" 
-                                           id="telefono" 
-                                           name="telefono" 
-                                           placeholder="70123456 o 2-2345678">
-                                </div>
-                            </div>
+                            <label for="apellidos" class="form-label fw-bold">
+                                <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
+                                Apellidos <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="apellidos" 
+                                   name="apellidos" 
+                                   placeholder="Ingrese los apellidos"
+                                   required>
                         </div>
 
                         <!-- Botones de acción -->
-                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4" style="border-top: 2px solid #e9ecef;">
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-4" style="border-top: 2px solid #e9ecef;">
                             <a href="{{ url_for('docentes.listar') }}" class="btn btn-secondary btn-lg">
                                 <i class="bi bi-x-circle me-2"></i>Cancelar
                             </a>
@@ -165,21 +60,6 @@
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
-
-            <!-- Información adicional -->
-            <div class="card card-emi mt-4">
-                <div class="card-body p-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-lightbulb-fill me-3" style="font-size: 2rem; color: var(--emi-amarillo);"></i>
-                        <div>
-                            <strong style="color: var(--emi-azul-oscuro);">Nota:</strong>
-                            <span class="text-muted">
-                                Después de registrar el docente, podrá agregar criterios de producción intelectual y generar su certificado desde la vista de detalles.
-                            </span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

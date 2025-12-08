@@ -32,14 +32,11 @@ def listar():
         query = query.filter(
             db.or_(
                 Docente.nombres.ilike(f'%{search}%'),
-                Docente.apellidos.ilike(f'%{search}%'),
-                Docente.ci.ilike(f'%{search}%')
+                Docente.apellidos.ilike(f'%{search}%')
             )
         )
     
-    # Filtro por unidad académica
-    if unidad_id:
-        query = query.filter_by(unidad_academica_id=int(unidad_id))
+    # Filtro por unidad académica eliminado (ya no existe en el modelo)
     
     # Paginación
     pagination = query.order_by(Docente.apellidos, Docente.nombres).paginate(
@@ -61,22 +58,10 @@ def listar():
 def crear():
     """Crea un nuevo docente"""
     if request.method == 'POST':
-        # Validar CI único
-        ci = request.form.get('ci')
-        if Docente.query.filter_by(ci=ci).first():
-            flash(f'Ya existe un docente con el CI {ci}', 'danger')
-            return redirect(url_for('docentes.crear'))
-        
-        # Crear nuevo docente
+        # Crear nuevo docente (solo nombres y apellidos)
         docente = Docente(
             nombres=request.form.get('nombres'),
             apellidos=request.form.get('apellidos'),
-            ci=ci,
-            unidad_academica_id=request.form.get('unidad_academica_id'),
-            cargo=request.form.get('cargo'),
-            años_servicio=request.form.get('años_servicio', type=int),
-            email=request.form.get('email'),
-            telefono=request.form.get('telefono'),
             requiere_regeneracion=True
         )
         
@@ -86,8 +71,7 @@ def crear():
         flash(f'Docente {docente.nombre_completo} creado exitosamente', 'success')
         return redirect(url_for('docentes.ver', id=docente.id))
     
-    unidades = UnidadAcademica.query.filter_by(activo=True).order_by(UnidadAcademica.codigo).all()
-    return render_template('docentes/crear.html', unidades=unidades)
+    return render_template('docentes/crear.html')
 
 @docentes_bp.route('/<int:id>')
 @login_required
@@ -105,22 +89,9 @@ def editar(id):
     docente = Docente.query.get_or_404(id)
     
     if request.method == 'POST':
-        # Validar CI único (excepto el actual)
-        ci = request.form.get('ci')
-        ci_existente = Docente.query.filter_by(ci=ci).first()
-        if ci_existente and ci_existente.id != docente.id:
-            flash(f'Ya existe otro docente con el CI {ci}', 'danger')
-            return redirect(url_for('docentes.editar', id=id))
-        
-        # Actualizar datos
+        # Actualizar datos (solo nombres y apellidos)
         docente.nombres = request.form.get('nombres')
         docente.apellidos = request.form.get('apellidos')
-        docente.ci = ci
-        docente.unidad_academica_id = request.form.get('unidad_academica_id')
-        docente.cargo = request.form.get('cargo')
-        docente.años_servicio = request.form.get('años_servicio', type=int)
-        docente.email = request.form.get('email')
-        docente.telefono = request.form.get('telefono')
         docente.requiere_regeneracion = True
         
         db.session.commit()
@@ -128,8 +99,7 @@ def editar(id):
         flash(f'Docente {docente.nombre_completo} actualizado exitosamente', 'success')
         return redirect(url_for('docentes.ver', id=docente.id))
     
-    unidades = UnidadAcademica.query.filter_by(activo=True).order_by(UnidadAcademica.codigo).all()
-    return render_template('docentes/editar.html', docente=docente, unidades=unidades)
+    return render_template('docentes/editar.html', docente=docente)
 
 @docentes_bp.route('/<int:id>/eliminar', methods=['POST'])
 @login_required
