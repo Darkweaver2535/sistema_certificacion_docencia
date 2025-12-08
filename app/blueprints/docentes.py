@@ -19,14 +19,14 @@ def allowed_file(filename):
 @docentes_bp.route('/')
 @login_required
 def listar():
-    """Lista todos los docentes con paginación y búsqueda"""
+    """Lista todos los criterios de docentes con paginación y búsqueda"""
     page = request.args.get('page', 1, type=int)
     search = request.args.get('search', '', type=str)
-    unidad_id = request.args.get('unidad', '', type=str)
     
-    query = Docente.query.filter_by(activo=True)
+    # Cambiar a listar criterios en lugar de docentes
+    query = DocenteCriterio.query.join(DocenteCriterio.docente).filter(Docente.activo == True)
     
-    # Filtro de búsqueda
+    # Filtro de búsqueda por nombre de docente
     if search:
         query = query.filter(
             db.or_(
@@ -35,17 +35,15 @@ def listar():
             )
         )
     
-    # Filtro por unidad académica eliminado (ya no existe en el modelo)
+    # Paginación ordenada por apellido y nombre de docente
+    pagination = query.join(DocenteCriterio.tipo_criterio).order_by(
+        Docente.apellidos, Docente.nombres, DocenteCriterio.tipo_criterio_id
+    ).paginate(page=page, per_page=15, error_out=False)
     
-    # Paginación
-    pagination = query.order_by(Docente.apellidos, Docente.nombres).paginate(
-        page=page, per_page=15, error_out=False
-    )
-    
-    docentes = pagination.items
+    criterios = pagination.items
     
     return render_template('docentes/listar.html', 
-                         docentes=docentes, 
+                         criterios=criterios, 
                          pagination=pagination,
                          search=search)
 

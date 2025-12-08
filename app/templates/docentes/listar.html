@@ -34,26 +34,13 @@
         </div>
         <div class="card-body">
             <form method="GET" action="{{ url_for('docentes.listar') }}" class="row g-3 form-emi">
-                <div class="col-md-5">
+                <div class="col-md-9">
                     <label class="form-label">
-                        <i class="bi bi-search me-1"></i>Buscar
+                        <i class="bi bi-search me-1"></i>Buscar por Nombre de Docente
                     </label>
                     <input type="text" class="form-control form-control-lg" name="search" 
-                           placeholder="Nombre, apellido o CI..." 
+                           placeholder="Nombre o apellido del docente..." 
                            value="{{ search }}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">
-                        <i class="bi bi-building me-1"></i>Unidad Académica
-                    </label>
-                    <select class="form-select form-select-lg" name="unidad">
-                        <option value="">Todas las Unidades</option>
-                        {% for unidad in unidades %}
-                        <option value="{{ unidad.id }}" {% if unidad_id == unidad.id|string %}selected{% endif %}>
-                            {{ unidad.codigo }} - {{ unidad.ciudad }}
-                        </option>
-                        {% endfor %}
-                    </select>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <div class="btn-group w-100">
@@ -74,39 +61,49 @@
         <div class="card-header">
             <h5 class="mb-0">
                 <i class="bi bi-list-ul"></i> 
-                Lista de Docentes
-                {% if docentes %}
+                Docentes y Criterios
+                {% if criterios %}
                     <span class="badge badge-emi-info ms-2">{{ pagination.total }} registros</span>
                 {% endif %}
             </h5>
         </div>
         <div class="card-body p-0">
-            {% if docentes %}
+            {% if criterios %}
             <div class="table-responsive">
                 <table class="table table-emi table-hover mb-0">
                     <thead>
                         <tr>
                             <th>Nombre Completo</th>
-                            <th>Fecha Registro</th>
+                            <th>Criterio</th>
+                            <th>Contenido del Criterio</th>
                             <th class="text-center">Certificado</th>
                             <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for docente in docentes %}
+                        {% for criterio in criterios %}
                         <tr>
                             <td>
-                                <strong style="color: var(--emi-azul-oscuro);">{{ docente.nombre_completo }}</strong>
-                            </td>
-                            <td>
+                                <strong style="color: var(--emi-azul-oscuro);">{{ criterio.docente.nombre_completo }}</strong>
+                                <br>
                                 <small class="text-muted">
                                     <i class="bi bi-calendar-check me-1"></i>
-                                    {{ docente.fecha_registro.strftime('%d/%m/%Y') }}
+                                    {{ criterio.docente.fecha_registro.strftime('%d/%m/%Y') }}
+                                </small>
+                            </td>
+                            <td>
+                                <span class="badge badge-emi-info">
+                                    {{ criterio.tipo_criterio.nombre }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted" style="max-width: 300px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{ criterio.detalles or '-' }}
                                 </small>
                             </td>
                             <td class="text-center">
-                                {% if docente.certificado %}
-                                    <span class="badge badge-emi-success" title="Tiene certificado">
+                                {% if criterio.certificado %}
+                                    <span class="badge badge-emi-success" title="Certificado generado">
                                         <i class="bi bi-check-circle-fill"></i> Generado
                                     </span>
                                 {% else %}
@@ -117,37 +114,30 @@
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('docentes.ver', id=docente.id) }}" 
-                                       class="btn btn-outline-primary" title="Ver detalles"
+                                    <a href="{{ url_for('docentes.ver', id=criterio.docente.id) }}" 
+                                       class="btn btn-outline-primary" title="Ver docente"
                                        style="border-color: var(--emi-azul); color: var(--emi-azul);">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
-                                    <a href="{{ url_for('docentes.editar', id=docente.id) }}" 
-                                       class="btn btn-outline-warning" title="Editar"
-                                       style="border-color: var(--emi-amarillo); color: #856404;">
-                                        <i class="bi bi-pencil-fill"></i>
+                                    <a href="{{ url_for('criterios.gestionar', docente_id=criterio.docente.id) }}" 
+                                       class="btn btn-outline-info" title="Gestionar criterios"
+                                       style="border-color: var(--emi-azul); color: var(--emi-azul);">
+                                        <i class="bi bi-list-check"></i>
                                     </a>
-                                    <button type="button" class="btn btn-outline-danger" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteModal{{ docente.id }}"
-                                            title="Eliminar">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
+                                    {% if criterio.certificado %}
+                                    <a href="{{ url_for('certificados.descargar_qr', id=criterio.certificado.id) }}" 
+                                       class="btn btn-outline-success" title="Descargar QR"
+                                       style="border-color: #28a745; color: #28a745;">
+                                        <i class="bi bi-qr-code"></i>
+                                    </a>
+                                    {% endif %}
                                 </div>
-
-                                <!-- Modal de confirmación de eliminación -->
-                                <div class="modal fade" id="deleteModal{{ docente.id }}" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header" style="background: linear-gradient(135deg, var(--emi-azul-oscuro) 0%, var(--emi-azul) 100%); color: white;">
-                                                <h5 class="modal-title">
-                                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                                    Confirmar Eliminación
-                                                </h5>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body text-center py-4">
-                                                <i class="bi bi-person-x" style="font-size: 4rem; color: #dc3545;"></i>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
                                                 <p class="mt-3 mb-2">¿Está seguro de eliminar al docente?</p>
                                                 <h5 style="color: var(--emi-azul-oscuro);">{{ docente.nombre_completo }}</h5>
                                                 <p class="text-muted small mb-0">Esta acción no se puede deshacer</p>
@@ -178,7 +168,7 @@
                 <nav>
                     <ul class="pagination justify-content-center mb-0">
                         <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('docentes.listar', page=pagination.prev_num, search=search, unidad=unidad_id) }}"
+                            <a class="page-link" href="{{ url_for('docentes.listar', page=pagination.prev_num, search=search) }}"
                                style="color: var(--emi-azul);">
                                 <i class="bi bi-chevron-left"></i> Anterior
                             </a>
@@ -187,7 +177,7 @@
                         {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                             {% if page_num %}
                                 <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                    <a class="page-link" href="{{ url_for('docentes.listar', page=page_num, search=search, unidad=unidad_id) }}"
+                                    <a class="page-link" href="{{ url_for('docentes.listar', page=page_num, search=search) }}"
                                        {% if page_num == pagination.page %}style="background: var(--emi-azul); border-color: var(--emi-azul);"{% else %}style="color: var(--emi-azul);"{% endif %}>
                                         {{ page_num }}
                                     </a>
@@ -198,7 +188,7 @@
                         {% endfor %}
                         
                         <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('docentes.listar', page=pagination.next_num, search=search, unidad=unidad_id) }}"
+                            <a class="page-link" href="{{ url_for('docentes.listar', page=pagination.next_num, search=search) }}"
                                style="color: var(--emi-azul);">
                                 Siguiente <i class="bi bi-chevron-right"></i>
                             </a>
@@ -211,8 +201,8 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="bi bi-inbox" style="font-size: 5rem; color: #ccc;"></i>
-                <h4 class="mt-4 mb-2" style="color: var(--emi-azul-oscuro);">No se encontraron docentes</h4>
-                <p class="text-muted mb-4">Comience agregando el primer docente al sistema</p>
+                <h4 class="mt-4 mb-2" style="color: var(--emi-azul-oscuro);">No hay criterios registrados</h4>
+                <p class="text-muted mb-4">Comience agregando docentes y sus criterios de producción intelectual</p>
                 <a href="{{ url_for('docentes.crear') }}" class="btn btn-emi-primary btn-lg">
                     <i class="bi bi-person-plus-fill me-2"></i> Registrar Primer Docente
                 </a>
