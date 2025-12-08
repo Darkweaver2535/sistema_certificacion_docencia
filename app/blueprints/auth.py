@@ -50,25 +50,13 @@ def dashboard():
     """Dashboard principal del administrador"""
     from app.models.docente import Docente
     from app.models.certificado import Certificado
-    from app.models.unidad_academica import UnidadAcademica
     
-    # Estadísticas generales
+    # Estadísticas generales simplificadas
     total_docentes = Docente.query.filter_by(activo=True).count()
     total_certificados = Certificado.query.count()
-    total_unidades = UnidadAcademica.query.filter_by(activo=True).count()
     docentes_sin_certificado = Docente.query.filter_by(activo=True).filter(
         ~Docente.id.in_(db.session.query(Certificado.docente_id))
     ).count()
-    
-    # Docentes por unidad académica
-    unidades = UnidadAcademica.query.filter_by(activo=True).all()
-    stats_unidades = []
-    for unidad in unidades:
-        count = Docente.query.filter_by(unidad_academica_id=unidad.id, activo=True).count()
-        stats_unidades.append({
-            'unidad': unidad,
-            'count': count
-        })
     
     # Docentes recientes
     docentes_recientes = Docente.query.filter_by(activo=True).order_by(
@@ -78,7 +66,5 @@ def dashboard():
     return render_template('auth/dashboard.html',
                          total_docentes=total_docentes,
                          total_certificados=total_certificados,
-                         total_unidades=total_unidades,
                          docentes_sin_certificado=docentes_sin_certificado,
-                         stats_unidades=stats_unidades,
                          docentes_recientes=docentes_recientes)
