@@ -28,16 +28,16 @@ def init_database():
         
         print("📋 Creando criterios de certificación...")
         criterios = [
-            TipoCriterio(nombre='Libros publicados', descripcion='Autoría o coautoría de libros académicos', orden=1),
-            TipoCriterio(nombre='Artículos en revistas indexadas', descripcion='Publicaciones en revistas científicas indexadas', orden=2),
-            TipoCriterio(nombre='Capítulos de libros', descripcion='Contribuciones en libros académicos', orden=3),
-            TipoCriterio(nombre='Ponencias en congresos', descripcion='Presentaciones en eventos académicos', orden=4),
-            TipoCriterio(nombre='Proyectos de investigación', descripcion='Dirección o participación en proyectos de investigación', orden=5),
-            TipoCriterio(nombre='Tesis dirigidas', descripcion='Dirección de tesis de grado o posgrado', orden=6),
-            TipoCriterio(nombre='Patentes o registros', descripcion='Patentes de invención o registros de propiedad intelectual', orden=7),
-            TipoCriterio(nombre='Premios y reconocimientos', descripcion='Premios académicos o científicos recibidos', orden=8),
-            TipoCriterio(nombre='Formación académica avanzada', descripcion='Maestrías, Doctorados, Posdoctorados', orden=9),
-            TipoCriterio(nombre='Participación en redes académicas', descripcion='Membresía en sociedades científicas o redes de investigación', orden=10),
+            TipoCriterio(nombre='TALLERES Y CONGRESOS, SIMPOSIOS O SEMINARIOS COMO PONENTE - EMI', descripcion='Ponencias en talleres, congresos, simposios o seminarios dentro de EMI', orden=1),
+            TipoCriterio(nombre='TALLERES Y CONGRESOS, SIMPOSIOS O SEMINARIOS COMO PONENTE', descripcion='Ponencias en talleres, congresos, simposios o seminarios fuera de EMI', orden=2),
+            TipoCriterio(nombre='TEXTOS ACADÉMICOS, GUÍAS, MANUALES, VIDEOS EDUCATIVOS-EMI', descripcion='Textos académicos, guías, manuales o videos educativos en EMI', orden=3),
+            TipoCriterio(nombre='TEXTOS ACADÉMICOS, GUÍAS, MANUALES, VIDEOS EDUCATIVOS', descripcion='Textos académicos, guías, manuales o videos educativos fuera de EMI', orden=4),
+            TipoCriterio(nombre='LIBROS (SENAPI o ISBN) - EMI', descripcion='Libros con registro SENAPI o ISBN publicados en EMI', orden=5),
+            TipoCriterio(nombre='LIBROS (SENAPI o ISBN)', descripcion='Libros con registro SENAPI o ISBN publicados fuera de EMI', orden=6),
+            TipoCriterio(nombre='ARTÍCULOS ACADÉMICOS (OPINIÓN, REFLEXIÓN, REV. BIBLIOGRÁFICA) - EMI', descripcion='Artículos académicos de opinión, reflexión o revisión bibliográfica en EMI', orden=7),
+            TipoCriterio(nombre='ARTÍCULOS ACADÉMICOS (OPINIÓN, REFLEXIÓN, REV. BIBLIOGRÁFICA)', descripcion='Artículos académicos de opinión, reflexión o revisión bibliográfica fuera de EMI', orden=8),
+            TipoCriterio(nombre='ARTÍCULOS CIENTÍFICOS INDEXADOS (QS) - EMI', descripcion='Artículos científicos publicados en revistas indexadas QS en EMI', orden=9),
+            TipoCriterio(nombre='ARTÍCULOS CIENTÍFICOS INDEXADOS (QS)', descripcion='Artículos científicos publicados en revistas indexadas QS fuera de EMI', orden=10),
         ]
         db.session.add_all(criterios)
         
