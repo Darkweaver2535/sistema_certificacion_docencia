@@ -107,22 +107,22 @@
                             <div class="list-group-item py-4">
                                 <div class="row g-3">
                                     <!-- Columna del QR -->
-                                    <div class="col-12 col-md-3 text-center">
+                                    <div class="col-12 col-md-4 text-center">
                                         {% if cert.qr_path %}
                                         <img src="{{ cert.get_qr_url() }}" 
                                              alt="QR {{ cert.codigo_unico }}" 
-                                             class="img-fluid border rounded p-2 mb-2" 
-                                             style="max-width: 150px; width: 100%; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                             class="img-fluid border rounded p-3 mb-2" 
+                                             style="max-width: 280px; width: 100%; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
                                         {% else %}
                                         <div class="text-muted">
-                                            <i class="bi bi-qr-code" style="font-size: 3rem;"></i>
+                                            <i class="bi bi-qr-code" style="font-size: 5rem;"></i>
                                             <p class="small mt-2 mb-0">QR no disponible</p>
                                         </div>
                                         {% endif %}
                                     </div>
                                     
                                     <!-- Columna de información -->
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-5">
                                         <h6 class="mb-3" style="color: var(--emi-azul-oscuro); font-weight: 700; font-size: 1rem;">
                                             <span class="badge badge-emi-info me-2" style="font-size: 0.85rem;">{{ cert.docente_criterio.tipo_criterio.orden }}</span>
                                             {{ cert.docente_criterio.tipo_criterio.nombre }}
