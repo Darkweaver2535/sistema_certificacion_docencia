@@ -16,7 +16,13 @@ class Config:
     if database_url and database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
     
-    SQLALCHEMY_DATABASE_URI = database_url or 'sqlite:///emi_certificacion.db'
+    # Si no hay DATABASE_URL, usar SQLite (mucho más simple para Render free tier)
+    # La base de datos se guardará en el directorio del proyecto
+    if not database_url:
+        db_path = os.path.join(BASE_DIR, 'emi_certificacion.db')
+        database_url = f'sqlite:///{db_path}'
+    
+    SQLALCHEMY_DATABASE_URI = database_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuración de uploads
