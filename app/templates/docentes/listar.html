@@ -73,7 +73,9 @@
                 <table class="table table-emi table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>Nombre Completo</th>
+                            <th>Código Alfanumérico</th>
+                            <th>Código EMI</th>
+                            <th>Nombres y Apellidos</th>
                             <th>Criterio</th>
                             <th>Contenido del Criterio</th>
                             <th class="text-center">Certificado</th>
@@ -83,6 +85,20 @@
                     <tbody>
                         {% for criterio in criterios %}
                         <tr>
+                            <td>
+                                {% if criterio.certificado %}
+                                    <code class="text-primary" style="font-size: 0.85rem;">{{ criterio.certificado.codigo_unico }}</code>
+                                {% else %}
+                                    <small class="text-muted">-</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if criterio.certificado %}
+                                    <small class="text-muted" style="font-family: monospace;">{{ criterio.certificado.codigo_emi }}</small>
+                                {% else %}
+                                    <small class="text-muted">-</small>
+                                {% endif %}
+                            </td>
                             <td>
                                 <strong style="color: var(--emi-azul-oscuro);">{{ criterio.docente.nombre_completo }}</strong>
                                 <br>
@@ -97,7 +113,7 @@
                                 </span>
                             </td>
                             <td>
-                                <small class="text-muted" style="max-width: 300px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <small class="text-muted" style="max-width: 250px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     {{ criterio.detalles or '-' }}
                                 </small>
                             </td>
