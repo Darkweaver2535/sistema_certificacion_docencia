@@ -69,18 +69,24 @@ class CertificadoGenerator:
     def generar_qr_code(self, codigo_unico, codigo_emi):
         """
         Genera el código QR con texto simple (no URL)
-        Contenido: Nombres, Apellidos, Código Alfanumérico, Código EMI
+        Contenido: Nombres, Apellidos, Código Alfanumérico, Código EMI, Criterio y Descripción
         """
+        # Obtener detalles del criterio (puede ser largo, limitamos a 200 caracteres)
+        detalles = self.docente_criterio.detalles or "Sin detalles"
+        if len(detalles) > 200:
+            detalles = detalles[:197] + "..."
+        
         # Texto simple para el QR
         texto_qr = f"""Docente: {self.docente.nombre_completo}
 Código: {codigo_unico}
 EMI: {codigo_emi}
-Criterio: {self.docente_criterio.tipo_criterio.nombre}"""
+Criterio: {self.docente_criterio.tipo_criterio.nombre}
+Descripción: {detalles}"""
         
-        # Crear QR
+        # Crear QR con versión automática para ajustar al contenido
         qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            version=None,  # Versión automática según contenido
+            error_correction=qrcode.constants.ERROR_CORRECT_M,  # Nivel medio para más datos
             box_size=10,
             border=4,
         )
