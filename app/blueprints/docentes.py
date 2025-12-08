@@ -3,7 +3,6 @@ from flask_login import login_required
 from werkzeug.utils import secure_filename
 from app import db
 from app.models.docente import Docente
-from app.models.unidad_academica import UnidadAcademica
 from app.models.docente_criterio import DocenteCriterio
 import pandas as pd
 import os
@@ -44,14 +43,11 @@ def listar():
     )
     
     docentes = pagination.items
-    unidades = UnidadAcademica.query.filter_by(activo=True).all()
     
     return render_template('docentes/listar.html', 
                          docentes=docentes, 
                          pagination=pagination,
-                         unidades=unidades,
-                         search=search,
-                         unidad_id=unidad_id)
+                         search=search)
 
 @docentes_bp.route('/crear', methods=['GET', 'POST'])
 @login_required

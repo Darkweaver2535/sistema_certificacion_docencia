@@ -30,10 +30,4 @@ def create_app(config_class=Config):
     app.register_blueprint(certificados_bp)
     app.register_blueprint(public_bp)
     
-    # Comandos CLI personalizados
-    from app.commands import init_db_command, create_admin_command, seed_data_command
-    app.cli.add_command(init_db_command)
-    app.cli.add_command(create_admin_command)
-    app.cli.add_command(seed_data_command)
-    
     return app

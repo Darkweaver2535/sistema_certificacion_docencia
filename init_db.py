@@ -6,7 +6,6 @@ Se ejecuta automáticamente si la base de datos no existe
 
 from app import create_app, db
 from app.models.usuario import Usuario
-from app.models.unidad_academica import UnidadAcademica
 from app.models.tipo_criterio import TipoCriterio
 
 def init_database():
@@ -26,16 +25,6 @@ def init_database():
         admin = Usuario(username='admin', nombre_completo='Administrador EMI')
         admin.set_password('admin123')
         db.session.add(admin)
-        
-        print("🏢 Creando unidades académicas...")
-        unidades = [
-            UnidadAcademica(codigo='UNI-LA-PAZ', nombre='Unidad Académica La Paz', ciudad='La Paz'),
-            UnidadAcademica(codigo='UNI-CBBA', nombre='Unidad Académica Cochabamba', ciudad='Cochabamba'),
-            UnidadAcademica(codigo='UNI-SCZ', nombre='Unidad Académica Santa Cruz', ciudad='Santa Cruz'),
-            UnidadAcademica(codigo='UNI-ORURO', nombre='Unidad Académica Oruro', ciudad='Oruro'),
-            UnidadAcademica(codigo='UNI-SUCRE', nombre='Unidad Académica Sucre', ciudad='Sucre'),
-        ]
-        db.session.add_all(unidades)
         
         print("📋 Creando criterios de certificación...")
         criterios = [
