@@ -37,11 +37,11 @@
                 </a>
                 {% if docente.certificado %}
                 <a href="{{ url_for('certificados.descargar', id=docente.certificado.id) }}" class="btn btn-success">
-                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> Descargar Certificado
+                    <i class="bi bi-qr-code me-1"></i> Ver Certificados
                 </a>
                 {% else %}
                 <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
-                    <i class="bi bi-file-earmark-plus-fill me-1"></i> Generar Certificado
+                    <i class="bi bi-file-earmark-plus-fill me-1"></i> Generar Certificados
                 </a>
                 {% endif %}
             </div>
@@ -52,25 +52,9 @@
                 <a href="{{ url_for('criterios.gestionar', docente_id=docente.id) }}" class="btn btn-info me-2">
                     <i class="bi bi-list-check me-1"></i> Gestionar Criterios
                 </a>
-                {% if docente.certificado %}
-                <div class="btn-group">
-                    <a href="{{ url_for('certificados.descargar', id=docente.certificado.id) }}" class="btn btn-success">
-                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Descargar PDF
-                    </a>
-                    <a href="{{ url_for('certificados.generar', docente_id=docente.id, formato='docx') }}" class="btn btn-outline-success">
-                        <i class="bi bi-file-earmark-word-fill me-1"></i> Descargar Word
-                    </a>
-                </div>
-                {% else %}
-                <div class="btn-group">
-                    <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
-                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Generar PDF
-                    </a>
-                    <a href="{{ url_for('certificados.generar', docente_id=docente.id, formato='docx') }}" class="btn btn-outline-primary" style="border-color: var(--emi-azul); color: var(--emi-azul);">
-                        <i class="bi bi-file-earmark-word-fill me-1"></i> Generar Word
-                    </a>
-                </div>
-                {% endif %}
+                <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
+                    <i class="bi bi-file-earmark-plus-fill me-1"></i> Generar Certificados
+                </a>
             </div>
         </div>
     </div>
@@ -106,49 +90,46 @@
             <div class="card card-emi shadow-sm mt-4">
                 <div class="card-header" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none;">
                     <h5 class="mb-0">
-                        <i class="bi bi-file-earmark-check-fill me-2"></i>Estado del Certificado
+                        <i class="bi bi-file-earmark-check-fill me-2"></i>Certificados Generados
                     </h5>
                 </div>
-                <div class="card-body text-center py-4">
-                    {% if docente.certificado %}
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                        <h5 class="mt-3 mb-2" style="color: var(--emi-azul-oscuro); font-weight: 700;">Certificado Generado</h5>
-                        <div class="bg-light p-3 rounded mb-3">
-                            <small class="text-muted d-block mb-1">Código de Verificación</small>
-                            <code style="color: var(--emi-azul); font-size: 1.1rem; font-weight: 700;">{{ docente.certificado.codigo_unico }}</code>
+                <div class="card-body py-4">
+                    {% set total_certificados = docente.certificados.count() %}
+                    {% if total_certificados > 0 %}
+                        <div class="text-center mb-3">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3 mb-2" style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                                {{ total_certificados }} Certificado{% if total_certificados > 1 %}s{% endif %} Generado{% if total_certificados > 1 %}s{% endif %}
+                            </h5>
                         </div>
-                        <div class="text-start">
-                            <p class="mb-1">
-                                <small class="text-muted">
-                                    <i class="bi bi-calendar3 me-1"></i>Generado: 
-                                </small>
-                                <small><strong>{{ docente.certificado.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}</strong></small>
-                            </p>
-                            {% if docente.certificado.fecha_ultima_actualizacion != docente.certificado.fecha_generacion %}
-                            <p class="mb-1">
-                                <small class="text-muted">
-                                    <i class="bi bi-arrow-repeat me-1"></i>Última actualización: 
-                                </small>
-                                <small><strong>{{ docente.certificado.fecha_ultima_actualizacion.strftime('%d/%m/%Y %H:%M') }}</strong></small>
-                            </p>
-                            {% endif %}
+                        <div class="list-group">
+                            {% for cert in docente.certificados %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <strong style="color: var(--emi-azul-oscuro);">{{ cert.docente_criterio.tipo_criterio.nombre }}</strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            <code style="color: var(--emi-azul); font-size: 0.85rem;">{{ cert.codigo_emi }}</code>
+                                        </small>
+                                    </div>
+                                    <a href="{{ url_for('certificados.descargar_qr', id=cert.id) }}" 
+                                       class="btn btn-success btn-sm">
+                                        <i class="bi bi-qr-code me-1"></i> Descargar QR
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% if docente.requiere_regeneracion %}
-                        <div class="alert alert-warning mt-3 mb-0" style="border-left: 4px solid var(--emi-amarillo);">
-                            <small>
-                                <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                <strong>Requiere regeneración</strong><br>
-                                Los criterios han sido modificados
-                            </small>
-                        </div>
-                        {% endif %}
                     {% else %}
-                        <i class="bi bi-file-earmark-x" style="font-size: 4rem; color: #ccc;"></i>
-                        <h5 class="mt-3 mb-2" style="color: var(--emi-azul-oscuro); font-weight: 700;">Sin Certificado</h5>
-                        <p class="text-muted mb-3">Agregue criterios de producción intelectual y genere el certificado</p>
-                        <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
-                            <i class="bi bi-file-earmark-plus-fill me-2"></i>Generar Ahora
-                        </a>
+                        <div class="text-center">
+                            <i class="bi bi-file-earmark-x" style="font-size: 3rem; color: #ccc;"></i>
+                            <h5 class="mt-3 mb-2" style="color: var(--emi-azul-oscuro); font-weight: 700;">Sin Certificados</h5>
+                            <p class="text-muted mb-3">Agregue criterios y genere los certificados</p>
+                            <a href="{{ url_for('certificados.generar', docente_id=docente.id) }}" class="btn btn-emi-primary">
+                                <i class="bi bi-file-earmark-plus-fill me-2"></i>Generar Ahora
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>

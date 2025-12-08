@@ -39,10 +39,11 @@
                 <table class="table table-emi table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>Código</th>
+                            <th>Código Alfanumérico</th>
+                            <th>Código EMI</th>
                             <th>Docente</th>
-                            <th>Fecha Generación</th>
-                            <th>Última Actualización</th>
+                            <th>Criterio</th>
+                            <th>Contenido</th>
                             <th class="text-center">Estado</th>
                             <th class="text-end">Acciones</th>
                         </tr>
@@ -56,33 +57,30 @@
                                 </code>
                             </td>
                             <td>
+                                <code style="color: var(--emi-azul-oscuro); font-weight: 600; font-size: 0.9rem;">
+                                    {{ certificado.codigo_emi }}
+                                </code>
+                            </td>
+                            <td>
                                 <strong style="color: var(--emi-azul-oscuro);">
                                     {{ certificado.docente.nombre_completo }}
                                 </strong>
                             </td>
                             <td>
-                                <small class="text-muted">
-                                    <i class="bi bi-calendar3 me-1"></i>
-                                    {{ certificado.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}
-                                </small>
+                                <span class="badge badge-emi-info">
+                                    {{ certificado.docente_criterio.tipo_criterio.nombre }}
+                                </span>
                             </td>
                             <td>
-                                <small class="text-muted">
-                                    <i class="bi bi-clock-history me-1"></i>
-                                    {{ certificado.fecha_ultima_actualizacion.strftime('%d/%m/%Y %H:%M') }}
+                                <small class="text-muted" style="max-width: 200px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{ certificado.docente_criterio.detalles or '-' }}
                                 </small>
                             </td>
                             <td class="text-center">
                                 {% if certificado.valido %}
-                                    {% if certificado.docente.requiere_regeneracion %}
-                                        <span class="badge badge-emi-warning">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Requiere Regeneración
-                                        </span>
-                                    {% else %}
-                                        <span class="badge badge-emi-success">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Válido
-                                        </span>
-                                    {% endif %}
+                                    <span class="badge badge-emi-success">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Generado
+                                    </span>
                                 {% else %}
                                     <span class="badge bg-danger">
                                         <i class="bi bi-x-circle-fill me-1"></i> Inválido
@@ -91,36 +89,24 @@
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('certificados.descargar', id=certificado.id) }}" 
+                                    <a href="{{ url_for('certificados.descargar_qr', id=certificado.id) }}" 
                                        class="btn btn-success" 
                                        style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none;"
-                                       title="Descargar PDF">
-                                        <i class="bi bi-file-earmark-pdf-fill"></i>
-                                    </a>
-                                    <a href="{{ url_for('certificados.generar', docente_id=certificado.docente.id, formato='docx') }}" 
-                                       class="btn btn-outline-success" 
-                                       style="border-color: #28a745; color: #28a745;"
-                                       title="Descargar Word">
-                                        <i class="bi bi-file-earmark-word-fill"></i>
+                                       title="Descargar QR">
+                                        <i class="bi bi-qr-code"></i>
                                     </a>
                                     <a href="{{ url_for('certificados.regenerar', id=certificado.id) }}" 
                                        class="btn btn-outline-warning" 
                                        style="border-color: var(--emi-amarillo); color: #856404;"
-                                       title="Regenerar Certificado">
+                                       title="Regenerar Certificado"
+                                       onclick="return confirm('¿Está seguro de regenerar este certificado?');">
                                         <i class="bi bi-arrow-clockwise"></i>
                                     </a>
-                                    <a href="{{ url_for('public.verificar', codigo=certificado.codigo_unico) }}" 
-                                       class="btn btn-outline-info" 
-                                       style="border-color: var(--emi-azul); color: var(--emi-azul);"
-                                       title="Ver Verificación Pública" 
-                                       target="_blank">
-                                        <i class="bi bi-qr-code-scan"></i>
-                                    </a>
-                                    <a href="{{ url_for('docentes.ver', id=certificado.docente.id) }}" 
-                                       class="btn btn-outline-primary" 
-                                       style="border-color: var(--emi-azul); color: var(--emi-azul);"
-                                       title="Ver Docente">
-                                        <i class="bi bi-person-fill"></i>
+                                    <a href="{{ url_for('certificados.eliminar', id=certificado.id) }}" 
+                                       class="btn btn-outline-danger" 
+                                       title="Eliminar Certificado"
+                                       onclick="return confirm('¿Está seguro de eliminar este certificado?');">
+                                        <i class="bi bi-trash-fill"></i>
                                     </a>
                                 </div>
                             </td>

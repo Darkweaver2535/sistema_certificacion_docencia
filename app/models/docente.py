@@ -23,7 +23,7 @@ class Docente(db.Model):
     criterios = db.relationship('DocenteCriterio', backref='docente', lazy='dynamic', 
                                cascade='all, delete-orphan',
                                order_by='DocenteCriterio.tipo_criterio_id')
-    certificado = db.relationship('Certificado', backref='docente', uselist=False, cascade='all, delete-orphan')
+    certificados = db.relationship('Certificado', backref='docente', lazy='dynamic', cascade='all, delete-orphan')
     
     @property
     def nombre_completo(self):
