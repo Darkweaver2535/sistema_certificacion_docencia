@@ -3,28 +3,9 @@
 
 ### Requisitos Previos
 - Windows 10 o superior
-- PostgreSQL 13 o superior instalado
+- **NO requiere PostgreSQL** (usa SQLite integrado)
+- **NO requiere Python** (el ejecutable lo incluye)
 - 100 MB de espacio en disco
-
-### Instalación de PostgreSQL (si no está instalado)
-
-1. Descargue PostgreSQL desde: https://www.postgresql.org/download/windows/
-2. Ejecute el instalador y siga las instrucciones
-3. Durante la instalación:
-   - Anote la contraseña que configure para el usuario `postgres`
-   - Puerto por defecto: 5432
-   - Marque la opción de instalar pgAdmin 4
-
-### Configuración de la Base de Datos
-
-1. Abra pgAdmin 4 o use psql
-2. Cree una nueva base de datos llamada `certificacion_emi`
-3. Anote los siguientes datos:
-   - Host: `localhost`
-   - Puerto: `5432`
-   - Usuario: `postgres`
-   - Contraseña: [la que configuró]
-   - Base de datos: `certificacion_emi`
 
 ### Instalación del Sistema
 
@@ -32,22 +13,21 @@
    - Descomprima el archivo ZIP en una carpeta de su preferencia
    - Ejemplo: `C:\SistemaCertificacionEMI`
 
-2. **Configurar la conexión a la base de datos**
-   - Abra el archivo `.env` con un editor de texto
-   - Modifique la línea `DATABASE_URL` con sus datos:
+2. **Configuración (OPCIONAL)**
+   - El archivo `.env` ya viene configurado
+   - Solo modifique si desea cambiar la clave secreta:
    ```
-   DATABASE_URL=postgresql://postgres:SU_CONTRASEÑA@localhost:5432/certificacion_emi
+   SECRET_KEY=su-clave-secreta-personalizada
    ```
-   - Reemplace `SU_CONTRASEÑA` con la contraseña de PostgreSQL
+   - La base de datos SQLite se creará automáticamente en `emi_certificacion.db`
 
 3. **Ejecutar el sistema**
-   - Haga doble clic en `SistemaCertificacionEMI.exe`
+   - Haga doble clic en `iniciar.bat`
    - La primera vez, el sistema creará las tablas automáticamente
-   - Espere a que aparezca el mensaje: "Running on http://127.0.0.1:5001"
+   - Se abrirá su navegador en `http://localhost:5001`
+   - **IMPORTANTE:** Mantenga abierta la ventana del terminal
 
 4. **Acceder al sistema**
-   - Abra su navegador web (Chrome, Firefox, Edge)
-   - Vaya a: `http://localhost:5001`
    - Usuario por defecto: `admin`
    - Contraseña por defecto: `admin123`
 
@@ -66,33 +46,42 @@
 
 ### Solución de Problemas
 
-**Error: "No se puede conectar a la base de datos"**
-- Verifique que PostgreSQL esté ejecutándose
-- Revise el archivo `.env` y corrija los datos de conexión
-- Asegúrese de que la base de datos `certificacion_emi` existe
-
-**Error: "Puerto 5001 en uso"**
-- Cierre cualquier otra instancia del programa
-- O cambie el puerto en el archivo `run.py`
-
 **El navegador no abre automáticamente**
 - Abra manualmente: http://localhost:5001
 
+**Error: "Puerto 5001 en uso"**
+- Cierre cualquier otra instancia del programa
+- Reinicie la computadora
+
+**No aparece la ventana del navegador**
+- Espere 10 segundos y abra Chrome/Firefox
+- Vaya a: http://localhost:5001
+
 ### Crear Respaldos
 
+**Método 1: Copiar el archivo de base de datos**
+- Cierre el sistema (cierre la ventana del terminal)
+- Copie el archivo `emi_certificacion.db` a un lugar seguro
+- Guarde también la carpeta `app/static/qr_codes/` con los códigos QR
+
+**Método 2: Usar la función de respaldo del sistema**
 1. Inicie sesión en el sistema
 2. Vaya al Dashboard
 3. En la parte inferior, pase el mouse sobre "Herramientas Avanzadas"
-4. Haga clic en "Descargar Respaldo (PostgreSQL)"
+4. Haga clic en "Descargar Respaldo"
 5. Guarde el archivo .sql en un lugar seguro
 
 ### Restaurar desde Respaldo
 
-1. Abra pgAdmin 4
-2. Clic derecho en la base de datos `certificacion_emi`
-3. Seleccione "Restore..."
-4. Seleccione el archivo .sql del respaldo
-5. Haga clic en "Restore"
+**Si usó el Método 1:**
+- Cierre el sistema
+- Reemplace el archivo `emi_certificacion.db` con su copia de respaldo
+- Restaure la carpeta `app/static/qr_codes/` si es necesario
+- Inicie el sistema nuevamente
+
+**Si usó el Método 2:**
+- Use un visor de SQLite para importar el archivo .sql
+- O contacte soporte técnico
 
 ### Soporte Técnico
 

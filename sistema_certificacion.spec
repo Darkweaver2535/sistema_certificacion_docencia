@@ -16,7 +16,6 @@ a = Analysis(
         'flask',
         'flask_sqlalchemy',
         'flask_login',
-        'psycopg2',
         'qrcode',
         'PIL',
         'pandas',

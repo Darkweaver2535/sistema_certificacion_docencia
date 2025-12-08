@@ -23,11 +23,10 @@ if not exist ".env" (
     echo.
     (
         echo SECRET_KEY=emi-secret-key-production-2025
-        echo DATABASE_URL=postgresql://postgres:postgres@localhost:5432/certificacion_emi
         echo FLASK_ENV=production
     ) > .env
     echo Archivo .env creado.
-    echo IMPORTANTE: Edite el archivo .env con sus credenciales de PostgreSQL
+    echo El sistema usara SQLite como base de datos.
     echo.
 )
 
