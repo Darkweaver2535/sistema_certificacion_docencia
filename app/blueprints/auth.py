@@ -1,7 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db, login_manager
 from app.models.usuario import Usuario
+import os
+import shutil
+from datetime import datetime
+from config import Config
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -68,3 +72,72 @@ def dashboard():
                          total_certificados=total_certificados,
                          docentes_sin_certificado=docentes_sin_certificado,
                          docentes_recientes=docentes_recientes)
+
+@auth_bp.route('/respaldo/descargar')
+@login_required
+def descargar_respaldo():
+    """Descarga un respaldo de la base de datos PostgreSQL"""
+    try:
+        # Crear carpeta de respaldos si no existe
+        backup_dir = os.path.join(Config.BASE_DIR, 'backups')
+        os.makedirs(backup_dir, exist_ok=True)
+        
+        # Nombre del archivo de respaldo con timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_filename = f'certificacion_backup_{timestamp}.sql'
+        backup_path = os.path.join(backup_dir, backup_filename)
+        
+        # Obtener credenciales de la base de datos desde la URI
+        db_uri = Config.SQLALCHEMY_DATABASE_URI
+        
+        # Ejecutar pg_dump para crear respaldo
+        # Formato: postgresql://usuario:password@host:puerto/database
+        import subprocess
+        
+        # Parsear la URI de la base de datos
+        if db_uri.startswith('postgresql://'):
+            # Extraer componentes de la URI
+            import urllib.parse
+            parsed = urllib.parse.urlparse(db_uri)
+            
+            db_host = parsed.hostname
+            db_port = parsed.port or 5432
+            db_user = parsed.username
+            db_password = parsed.password
+            db_name = parsed.path[1:]  # Quitar el '/' inicial
+            
+            # Crear el comando pg_dump
+            env = os.environ.copy()
+            env['PGPASSWORD'] = db_password
+            
+            cmd = [
+                'pg_dump',
+                '-h', db_host,
+                '-p', str(db_port),
+                '-U', db_user,
+                '-d', db_name,
+                '-F', 'p',  # Formato plain (SQL)
+                '-f', backup_path
+            ]
+            
+            # Ejecutar pg_dump
+            result = subprocess.run(cmd, env=env, capture_output=True, text=True)
+            
+            if result.returncode != 0:
+                flash(f'Error al crear respaldo: {result.stderr}', 'danger')
+                return redirect(url_for('auth.dashboard'))
+            
+            # Enviar archivo para descarga
+            return send_file(
+                backup_path,
+                as_attachment=True,
+                download_name=backup_filename,
+                mimetype='application/sql'
+            )
+        else:
+            flash('Tipo de base de datos no soportado para respaldos automáticos', 'warning')
+            return redirect(url_for('auth.dashboard'))
+            
+    except Exception as e:
+        flash(f'Error al generar respaldo: {str(e)}', 'danger')
+        return redirect(url_for('auth.dashboard'))

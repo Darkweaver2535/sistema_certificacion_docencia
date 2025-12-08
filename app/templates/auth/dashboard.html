@@ -167,5 +167,41 @@
             </div>
         </div>
     </div>
+
+    <!-- Sección de Respaldos (medio oculta) -->
+    <div class="row mt-5">
+        <div class="col">
+            <div class="text-center" style="opacity: 0.3; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.3'">
+                <details class="d-inline-block">
+                    <summary class="text-muted" style="cursor: pointer; user-select: none; font-size: 0.85rem;">
+                        <i class="bi bi-shield-lock me-1"></i> Herramientas Avanzadas
+                    </summary>
+                    <div class="card card-emi mt-3" style="max-width: 500px; margin: 0 auto;">
+                        <div class="card-header" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white;">
+                            <h6 class="mb-0">
+                                <i class="bi bi-database-fill-down me-2"></i>Respaldos de Base de Datos
+                            </h6>
+                        </div>
+                        <div class="card-body text-start">
+                            <p class="text-muted small mb-3">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Descargue un respaldo completo de la base de datos en formato SQL.
+                            </p>
+                            <a href="{{ url_for('auth.descargar_respaldo') }}" 
+                               class="btn btn-outline-secondary w-100"
+                               onclick="return confirm('¿Desea descargar un respaldo de la base de datos? Esto puede tardar unos momentos.')">
+                                <i class="bi bi-download me-2"></i>
+                                Descargar Respaldo (PostgreSQL)
+                            </a>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-clock-history me-1"></i>
+                                Incluye: Docentes, Certificados, Criterios y Configuración
+                            </small>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
