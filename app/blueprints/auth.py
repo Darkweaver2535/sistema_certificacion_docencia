@@ -5,7 +5,7 @@ from app.models.usuario import Usuario
 import os
 import shutil
 from datetime import datetime
-from config import Config
+from config import Config, BASE_DIR
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -79,7 +79,7 @@ def descargar_respaldo():
     """Descarga un respaldo de la base de datos PostgreSQL"""
     try:
         # Crear carpeta de respaldos si no existe
-        backup_dir = os.path.join(Config.BASE_DIR, 'backups')
+        backup_dir = os.path.join(BASE_DIR, 'backups')
         os.makedirs(backup_dir, exist_ok=True)
         
         # Nombre del archivo de respaldo con timestamp
