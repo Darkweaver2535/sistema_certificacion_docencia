@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime
+import os
 
 class Certificado(db.Model):
     """Modelo para certificados generados (uno por cada criterio del docente)"""
@@ -30,6 +31,15 @@ class Certificado(db.Model):
     
     # Relación con DocenteCriterio (uno a uno - un criterio tiene máximo un certificado)
     docente_criterio = db.relationship('DocenteCriterio', backref=db.backref('certificado', uselist=False), lazy=True)
+    
+    def get_qr_url(self):
+        """Retorna la URL estática del código QR para mostrar en templates"""
+        if self.qr_path:
+            # Convertir ruta del sistema a URL estática
+            # app/static/qr_codes/ABCD-1234-EFGH.png -> /static/qr_codes/ABCD-1234-EFGH.png
+            filename = os.path.basename(self.qr_path)
+            return f'/static/qr_codes/{filename}'
+        return None
     
     def __repr__(self):
         return f'<Certificado {self.codigo_emi} - Docente:{self.docente_id}>'

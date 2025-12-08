@@ -105,18 +105,56 @@
                         <div class="list-group">
                             {% for cert in docente.certificados %}
                             <div class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between align-items-center">
-                                    <div>
-                                        <strong style="color: var(--emi-azul-oscuro);">{{ cert.docente_criterio.tipo_criterio.nombre }}</strong>
-                                        <br>
-                                        <small class="text-muted">
-                                            <code style="color: var(--emi-azul); font-size: 0.85rem;">{{ cert.codigo_emi }}</code>
-                                        </small>
+                                <div class="row align-items-center">
+                                    <!-- Columna del QR -->
+                                    <div class="col-md-3 text-center">
+                                        {% if cert.qr_path %}
+                                        <img src="{{ cert.get_qr_url() }}" 
+                                             alt="QR {{ cert.codigo_unico }}" 
+                                             class="img-fluid border rounded p-2" 
+                                             style="max-width: 150px; background: white;">
+                                        {% else %}
+                                        <div class="text-muted">
+                                            <i class="bi bi-qr-code" style="font-size: 3rem;"></i>
+                                            <p class="small mt-2">QR no disponible</p>
+                                        </div>
+                                        {% endif %}
                                     </div>
-                                    <a href="{{ url_for('certificados.descargar_qr', id=cert.id) }}" 
-                                       class="btn btn-success btn-sm">
-                                        <i class="bi bi-qr-code me-1"></i> Descargar QR
-                                    </a>
+                                    
+                                    <!-- Columna de información -->
+                                    <div class="col-md-6">
+                                        <h6 class="mb-2" style="color: var(--emi-azul-oscuro); font-weight: 700;">
+                                            <span class="badge badge-emi-info me-2">{{ cert.docente_criterio.tipo_criterio.orden }}</span>
+                                            {{ cert.docente_criterio.tipo_criterio.nombre }}
+                                        </h6>
+                                        <div class="mb-1">
+                                            <small class="text-muted d-block">Código Alfanumérico:</small>
+                                            <code class="text-primary" style="font-size: 0.95rem; font-weight: 600;">{{ cert.codigo_unico }}</code>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Código EMI:</small>
+                                            <small style="font-family: monospace; color: var(--emi-azul-oscuro); font-weight: 500;">{{ cert.codigo_emi }}</small>
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar-check me-1"></i>
+                                                Generado: {{ cert.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Columna de acciones -->
+                                    <div class="col-md-3 text-center">
+                                        <a href="{{ url_for('certificados.descargar_qr', id=cert.id) }}" 
+                                           class="btn btn-success btn-sm w-100 mb-2">
+                                            <i class="bi bi-download me-1"></i> Descargar QR
+                                        </a>
+                                        <a href="{{ url_for('certificados.regenerar', id=cert.id) }}" 
+                                           class="btn btn-outline-warning btn-sm w-100"
+                                           onclick="return confirm('¿Regenerar este certificado? Se crearán nuevos códigos.')">
+                                            <i class="bi bi-arrow-clockwise me-1"></i> Regenerar
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
