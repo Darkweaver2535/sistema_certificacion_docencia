@@ -8,8 +8,7 @@ class Docente(db.Model):
     __tablename__ = 'docentes'
     
     id = db.Column(db.Integer, primary_key=True)
-    nombres = db.Column(db.String(100), nullable=False)
-    apellidos = db.Column(db.String(100), nullable=False)
+    nombre_completo = db.Column(db.String(200), nullable=False)
     
     # Control de regeneración de certificado
     requiere_regeneracion = db.Column(db.Boolean, default=True)
@@ -24,11 +23,6 @@ class Docente(db.Model):
                                cascade='all, delete-orphan',
                                order_by='DocenteCriterio.tipo_criterio_id')
     certificados = db.relationship('Certificado', backref='docente', lazy='dynamic', cascade='all, delete-orphan')
-    
-    @property
-    def nombre_completo(self):
-        """Retorna el nombre completo del docente"""
-        return f"{self.nombres} {self.apellidos}"
     
     def __repr__(self):
         return f'<Docente {self.nombre_completo}>'

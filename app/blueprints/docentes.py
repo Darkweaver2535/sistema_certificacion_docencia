@@ -29,15 +29,12 @@ def listar():
     # Filtro de búsqueda por nombre de docente
     if search:
         query = query.filter(
-            db.or_(
-                Docente.nombres.ilike(f'%{search}%'),
-                Docente.apellidos.ilike(f'%{search}%')
-            )
+            Docente.nombre_completo.ilike(f'%{search}%')
         )
     
-    # Paginación ordenada por apellido y nombre de docente
+    # Paginación ordenada por nombre completo de docente
     pagination = query.join(DocenteCriterio.tipo_criterio).order_by(
-        Docente.apellidos, Docente.nombres, DocenteCriterio.tipo_criterio_id
+        Docente.nombre_completo, DocenteCriterio.tipo_criterio_id
     ).paginate(page=page, per_page=15, error_out=False)
     
     criterios = pagination.items
@@ -52,10 +49,9 @@ def listar():
 def crear():
     """Crea un nuevo docente y redirige a gestión de criterios"""
     if request.method == 'POST':
-        # Crear nuevo docente (solo nombres y apellidos)
+        # Crear nuevo docente
         docente = Docente(
-            nombres=request.form.get('nombres'),
-            apellidos=request.form.get('apellidos'),
+            nombre_completo=request.form.get('nombre_completo'),
             requiere_regeneracion=True
         )
         
@@ -84,9 +80,8 @@ def editar(id):
     docente = Docente.query.get_or_404(id)
     
     if request.method == 'POST':
-        # Actualizar datos (solo nombres y apellidos)
-        docente.nombres = request.form.get('nombres')
-        docente.apellidos = request.form.get('apellidos')
+        # Actualizar datos
+        docente.nombre_completo = request.form.get('nombre_completo')
         docente.requiere_regeneracion = True
         
         db.session.commit()
@@ -138,14 +133,10 @@ def importar():
                 else:
                     df = pd.read_excel(filepath)
                 
-                # Validar columnas requeridas
-                columnas_requeridas = ['nombres', 'apellidos', 'ci', 'unidad_codigo', 'cargo', 'años_servicio']
-                columnas_opcionales = ['email', 'telefono']
-                
-                for col in columnas_requeridas:
-                    if col not in df.columns:
-                        flash(f'Falta la columna requerida: {col}', 'danger')
-                        return redirect(url_for('docentes.importar'))
+                # Validar columna requerida
+                if 'nombre_completo' not in df.columns:
+                    flash('Falta la columna requerida: nombre_completo', 'danger')
+                    return redirect(url_for('docentes.importar'))
                 
                 # Procesar cada fila
                 exitosos = 0
@@ -153,28 +144,15 @@ def importar():
                 
                 for idx, row in df.iterrows():
                     try:
-                        # Validar CI único
-                        ci = str(row['ci']).strip()
-                        if Docente.query.filter_by(ci=ci).first():
-                            errores.append(f"Fila {idx+2}: CI {ci} ya existe")
-                            continue
+                        nombre = str(row['nombre_completo']).strip()
                         
-                        # Buscar unidad académica
-                        unidad = UnidadAcademica.query.filter_by(codigo=row['unidad_codigo']).first()
-                        if not unidad:
-                            errores.append(f"Fila {idx+2}: Unidad {row['unidad_codigo']} no existe")
+                        if not nombre:
+                            errores.append(f"Fila {idx+2}: nombre_completo vacío")
                             continue
                         
                         # Crear docente
                         docente = Docente(
-                            nombres=row['nombres'],
-                            apellidos=row['apellidos'],
-                            ci=ci,
-                            unidad_academica_id=unidad.id,
-                            cargo=row['cargo'],
-                            años_servicio=int(row['años_servicio']) if pd.notna(row['años_servicio']) else None,
-                            email=row.get('email', ''),
-                            telefono=row.get('telefono', ''),
+                            nombre_completo=nombre,
                             requiere_regeneracion=True
                         )
                         
@@ -208,16 +186,13 @@ def importar():
 @login_required
 def descargar_template():
     """Descarga plantilla de importación"""
-    # Crear DataFrame con columnas de ejemplo
+    # Crear DataFrame con columna de ejemplo
     data = {
-        'nombres': ['Juan', 'María'],
-        'apellidos': ['Pérez López', 'García Rojas'],
-        'ci': ['12345678', '87654321'],
-        'unidad_codigo': ['UALP', 'UACB'],
-        'cargo': ['Docente Titular', 'Docente Asociado'],
-        'años_servicio': [10, 5],
-        'email': ['juan.perez@emi.edu.bo', 'maria.garcia@emi.edu.bo'],
-        'telefono': ['70123456', '71234567']
+        'nombre_completo': [
+            'Juan Pérez López',
+            'María García Rojas',
+            'Carlos Rodríguez Mamani'
+        ]
     }
     
     df = pd.DataFrame(data)

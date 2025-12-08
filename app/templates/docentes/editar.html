@@ -31,30 +31,21 @@
                                 <i class="bi bi-person-fill me-2"></i>Datos Personales
                             </h5>
                             <div class="mb-3">
-                                <label for="nombres" class="form-label fw-bold">
-                                    <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
-                                    Nombres <span class="text-danger">*</span>
+                                <label for="nombre_completo" class="form-label fw-bold">
+                                    <i class="bi bi-person-fill me-1" style="color: var(--emi-azul);"></i>
+                                    Nombre Completo <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" 
                                        class="form-control form-control-lg" 
-                                       id="nombres" 
-                                       name="nombres" 
-                                       value="{{ docente.nombres }}"
-                                       placeholder="Ingrese los nombres"
+                                       id="nombre_completo" 
+                                       name="nombre_completo" 
+                                       value="{{ docente.nombre_completo }}"
+                                       placeholder="Ej: Juan Pérez López"
                                        required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="apellidos" class="form-label fw-bold">
-                                    <i class="bi bi-pencil-fill me-1" style="color: var(--emi-azul);"></i>
-                                    Apellidos <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" 
-                                       class="form-control form-control-lg" 
-                                       id="apellidos" 
-                                       name="apellidos" 
-                                       value="{{ docente.apellidos }}"
-                                       placeholder="Ingrese los apellidos"
-                                       required>
+                                <div class="form-text">
+                                    <i class="bi bi-lightbulb me-1"></i>
+                                    Ingrese el nombre y apellidos completos del docente
+                                </div>
                             </div>
                         </div>
 
