@@ -50,7 +50,7 @@ def listar():
 @docentes_bp.route('/crear', methods=['GET', 'POST'])
 @login_required
 def crear():
-    """Crea un nuevo docente"""
+    """Crea un nuevo docente y redirige a gestión de criterios"""
     if request.method == 'POST':
         # Crear nuevo docente (solo nombres y apellidos)
         docente = Docente(
@@ -62,8 +62,9 @@ def crear():
         db.session.add(docente)
         db.session.commit()
         
-        flash(f'Docente {docente.nombre_completo} creado exitosamente', 'success')
-        return redirect(url_for('docentes.ver', id=docente.id))
+        flash(f'Docente {docente.nombre_completo} creado exitosamente. Ahora agregue los criterios.', 'success')
+        # Redirigir directamente a gestión de criterios
+        return redirect(url_for('criterios.gestionar', docente_id=docente.id))
     
     return render_template('docentes/crear.html')
 
