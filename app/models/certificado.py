@@ -7,7 +7,7 @@ class Certificado(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     docente_id = db.Column(db.Integer, db.ForeignKey('docentes.id'), nullable=False)
-    docente_criterio_id = db.Column(db.Integer, db.ForeignKey('docente_criterios.id'), unique=True, nullable=False)
+    docente_criterio_id = db.Column(db.Integer, db.ForeignKey('docentes_criterios.id'), unique=True, nullable=False)
     
     # Código único alfanumérico (formato: ABCD-1234-EFGH)
     codigo_unico = db.Column(db.String(14), unique=True, nullable=False, index=True)
