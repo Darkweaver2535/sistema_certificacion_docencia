@@ -46,11 +46,12 @@ def generar(docente_id):
                 certificados_generados += 1
         
         if certificados_generados > 0:
-            flash(f'Se generaron {certificados_generados} certificados para {docente.nombre_completo}', 'success')
+            flash(f'¡Certificados generados exitosamente! Se crearon {certificados_generados} certificado(s) con códigos QR únicos.', 'success')
         else:
             flash(f'Todos los certificados ya están generados para {docente.nombre_completo}', 'info')
         
-        return redirect(url_for('certificados.listar'))
+        # Redirigir de vuelta a la vista del docente
+        return redirect(url_for('docentes.ver', id=docente_id))
     
     except Exception as e:
         flash(f'Error al generar certificados: {str(e)}', 'danger')
