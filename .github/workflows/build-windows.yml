@@ -1,0 +1,57 @@
+name: Compilar Ejecutable Windows
+
+on:
+  push:
+    branches: [ simple ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Generar ejecutable
+      run: |
+        pyinstaller sistema_certificacion.spec
+    
+    - name: Preparar distribución
+      run: |
+        mkdir distribucion
+        copy dist\SistemaCertificacionEMI.exe distribucion\
+        copy .env.example distribucion\.env
+        copy INSTALACION_WINDOWS.md distribucion\
+        copy iniciar.bat distribucion\
+        echo SISTEMA DE CERTIFICACION - ESCUELA MILITAR DE INGENIERIA > distribucion\LEEME.txt
+        echo. >> distribucion\LEEME.txt
+        echo 1. Instale PostgreSQL si no lo tiene >> distribucion\LEEME.txt
+        echo 2. Cree una base de datos llamada 'certificacion_emi' >> distribucion\LEEME.txt
+        echo 3. Edite el archivo .env con sus credenciales >> distribucion\LEEME.txt
+        echo 4. Haga doble clic en iniciar.bat >> distribucion\LEEME.txt
+        echo 5. El sistema se abrira en http://localhost:5001 >> distribucion\LEEME.txt
+        echo. >> distribucion\LEEME.txt
+        echo Usuario: admin >> distribucion\LEEME.txt
+        echo Contrasena: admin123 >> distribucion\LEEME.txt
+    
+    - name: Comprimir distribución
+      run: |
+        powershell Compress-Archive -Path distribucion\* -DestinationPath SistemaCertificacionEMI.zip
+    
+    - name: Subir ejecutable
+      uses: actions/upload-artifact@v3
+      with:
+        name: SistemaCertificacionEMI-Windows
+        path: SistemaCertificacionEMI.zip
+        retention-days: 90
